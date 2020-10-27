@@ -30,3 +30,8 @@ The size of a standart card pic is 177x254 that downloads automaticaly when you 
 - Save.
 
 This method removes all cards you already download from the list, remain less cards to download next time you execute the program.
+
+### Bugs:
+- The program don't download normal monsters pics if you're using *allcards.ydk*;
+- Maybe you have problem with alternate artworks;
+
