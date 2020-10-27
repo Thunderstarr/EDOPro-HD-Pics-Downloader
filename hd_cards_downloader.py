@@ -30,7 +30,7 @@ def download(deck, deck_size):
                                    "pics/" + carta + ".jpg")
         counter += 1
         print("Downloading... (" + str(counter) + "/" + str(deck_size) + ") [" +
-              str(round(counter/deck_size * 100)) + "%]")
+              str(round(counter/deck_size * 100)) + "%]", end='\r')
         time.sleep(0.04)
     print('')
 
