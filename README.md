@@ -12,7 +12,21 @@ The size of a standart card pic is 177x254 that downloads automaticaly when you 
 - If you are in deck edit screen, just get back to main menu to reload the pics;
 
 ### Download all cards pics (officials tgc/ocg):
+- I recommend you delete all cards pics before you do what follow;
 - Download allcards.ydk file;
 - Drop it into your game's deck folder;
 - Open the program and insert allcards;
-- Wait until done. It can take a while because there are more than nine thousant cards;
+- Wait until done. It can take a while because there are more than nine thousant cards.
+
+:raised_hand: Warning: I ran this code a few times and **the program didn't download all the cards**. I don't know how to solve this problem yet, but work around is simple:
+- Open the pics folder and scroll all way down to the last buggy pic;
+- Go Rename and copy it's name (without .jpg);
+- Go to your game's deck folder and open *allcards.ydk* with notepad;
+- Hold *Ctrl* and press *h*;
+- Paste the name you copied and click on Locate Next;
+- Select the id above of that you located;
+- Scroll all way up, hold *Shift* and select the id below *#main*;
+- Press *Backspace*;
+- Save.
+
+This method removes all cards you already download from the list, remain less cards to download next time you execute the program.
