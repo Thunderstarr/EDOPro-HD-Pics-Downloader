@@ -26,8 +26,11 @@ def download(deck, deck_size):
     """Recieves a list and downloads the cards pics"""
     counter = 0
     for carta in deck:
-        urllib.request.urlretrieve("https://storage.googleapis.com/ygoprodeck.com/pics/" + carta + ".jpg",
-                                   "pics/" + carta + ".jpg")
+        try:
+            urllib.request.urlretrieve("https://storage.googleapis.com/ygoprodeck.com/pics/" + carta + ".jpg",
+                                       "pics/" + carta + ".jpg")
+        except urllib.error.HTTPError:
+            pass
         counter += 1
         print("Downloading... (" + str(counter) + "/" + str(deck_size) + ") [" +
               str(round(counter/deck_size * 100)) + "%]", end='\r')
