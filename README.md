@@ -13,12 +13,20 @@ The size of a standart card pic is 177x254 that downloads automaticaly when you 
 - Insert a valid deck name (without .ydk);
 - If you are in deck edit screen, just get back to main menu to reload the pics;
 
-### Download all cards pics (officials tgc/ocg):
+### Commands!:
+- */help* to see all commands;
+- */allcards* to download all cards pics;
+- */allfields* to download all fields artworks;
+- */exit to exit*
+
+### Download all cards pics (tgc/ocg):
 - I recommend you delete all cards pics before you do what follow;
-- Download [allcards.ydk](allcards.ydk) file;
-- Drop it into your game's deck folder;
-- Open the program and insert: *allcards*;
+- Open the program and insert the command: */allcards*;
 - Wait until done. It can take a while because it's over nine thousand cards.
+
+### Download all fields artworks (tcg/ocg):
+- I recommend you delete all cards pics before you do what follow;
+- Open the program and insert the command: */allfields*;
 
 ### You can help me:
 With the release of new cards, two problems appear:
@@ -26,5 +34,4 @@ With the release of new cards, two problems appear:
 - The card's name can change from OCG to TCG (The game considers TCG name as default);
 
 ### Future features:
-- Downloads all Field's Artworks;
 - Tokens also in HD. A large part is available in the database and a generic token will be downloaded if it is not there. The problem is storing a deck with a token, the game automatically deletes them, making it difficult to test.
