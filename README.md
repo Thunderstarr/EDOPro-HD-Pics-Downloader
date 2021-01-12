@@ -22,5 +22,9 @@ The size of a standart card pic is 177x254 that downloads automaticaly when you 
 
 ### You can help me:
 With the release of new cards, two problems appear:
-1 - The allcards.ydk don't cover all cards;
-2 - The card's name can change from OCG to TCG (The game considers TCG name as default);
+- The allcards.ydk don't cover all cards;
+- The card's name can change from OCG to TCG (The game considers TCG name as default);
+
+### Future features:
+- Downloads all Field's Artworks;
+- Tokens also in HD. A large part is available in the database and a generic token will be downloaded if it is not there. The problem is storing a deck with a token, the game automatically deletes them, making it difficult to test.
