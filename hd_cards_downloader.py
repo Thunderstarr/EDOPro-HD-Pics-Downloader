@@ -44,7 +44,8 @@ def download(deck: list,
 def main(exit_tick: int = 5):
     # Intro prints
     print('Created by Alexsander Rosante')
-    print('This program downloads cards pics from https://db.ygoprodeck.com/\n')
+    print('Download only from github.com/AlexsanderRST/edopro-hd-cards-downloader')
+    print('This program downloads cards pics from db.ygoprodeck.com/\n')
     print('Enter /help to see the commands')
 
     # Input
@@ -53,8 +54,8 @@ def main(exit_tick: int = 5):
         deck_name = input("Insert deck name (without .ydk) or command: ")
         if deck_name == '/help':
             print('\nCommands:')
-            print(" /allcards to download all card's pics")
-            print(" /allfields to download all field's artworks")
+            print(" /allcards to download all cards pics")
+            print(" /allfields to download all fields artworks")
             print(' /exit to exit\n')
         elif deck_name == '/exit':
             done = True
