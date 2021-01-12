@@ -1,6 +1,6 @@
 # Created by Alexsander Rosante
 
-import urllib.request
+from urllib import request, error
 import time
 
 
@@ -15,8 +15,8 @@ def get_deck_list(deck_name):
     deck.remove("#extra\n")
     deck.remove("!side\n")
     aux = []
-    for carta in deck:
-        code = carta[:-1]
+    for card in deck:
+        code = card[:-1]
         aux.append(code)
     deck = aux[1:]
     return deck
@@ -25,15 +25,15 @@ def get_deck_list(deck_name):
 def download(deck, deck_size):
     """Recieves a list and downloads the cards pics"""
     counter = 0
-    for carta in deck:
+    for card in deck:
         try:
-            urllib.request.urlretrieve("https://storage.googleapis.com/ygoprodeck.com/pics/" + carta + ".jpg",
-                                       "pics/" + carta + ".jpg")
-        except urllib.error.HTTPError:
+            request.urlretrieve("https://storage.googleapis.com/ygoprodeck.com/pics/" + card + ".jpg",
+                                "pics/" + card + ".jpg")
+        except error.HTTPError:
             pass
         counter += 1
         print("Downloading... (" + str(counter) + "/" + str(deck_size) + ") [" +
-              str(round(counter/deck_size * 100)) + "%]", end='\r')
+              str(round(counter / deck_size * 100)) + "%]", end='\r')
         time.sleep(0.04)
     print('')
 
