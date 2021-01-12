@@ -7,7 +7,7 @@ import time
 def get_deck_list(deck_name):
     """Returns a list of all cards code from a ydk file"""
     try:
-        deck = open(deck_name).readlines()
+        deck = open('deck/' + deck_name + '.ydk').readlines()
     except FileNotFoundError:
         print('Deck not found')
         return False
@@ -22,13 +22,16 @@ def get_deck_list(deck_name):
     return deck
 
 
-def download(deck, deck_size):
+def download(deck: list,
+             database_url='https://storage.googleapis.com/ygoprodeck.com/pics/',
+             folder='pics/',
+             final_extension='.jpg'):
     """Recieves a list and downloads the cards pics"""
-    counter = 0
+    deck_size, counter = len(deck), 0
     for card in deck:
         try:
-            request.urlretrieve("https://storage.googleapis.com/ygoprodeck.com/pics/" + card + ".jpg",
-                                "pics/" + card + ".jpg")
+            request.urlretrieve(database_url + card + ".jpg",
+                                folder + card + final_extension)
         except error.HTTPError:
             pass
         counter += 1
@@ -38,19 +41,48 @@ def download(deck, deck_size):
     print('')
 
 
-def main():
+def main(exit_tick: int = 5):
+    # Intro prints
     print('Created by Alexsander Rosante')
     print('This program downloads cards pics from https://db.ygoprodeck.com/\n')
-    deck_name = "deck/" + input("Insert deck name (without .ydk): ") + ".ydk"
+    print('Enter /help to see the commands')
+
+    # Input
+    done = False
+    while not done:
+        deck_name = input("Insert deck name (without .ydk) or command: ")
+        if deck_name == '/help':
+            print('\nCommands:')
+            print(" /allcards to download all card's pics")
+            print(" /allfields to download all field's artworks")
+            print(' /exit to exit\n')
+        elif deck_name == '/exit':
+            done = True
+        else:
+            if deck_name in ('/allfields', '/allcards'):
+                if deck_name == '/allfields':
+                    deck_name, url = 'allfields', 'https://tinyurl.com/y26zea99'
+                else:
+                    deck_name, url = 'allcards', 'https://tinyurl.com/y5om2agl'
+                request.urlretrieve(url, 'deck/' + deck_name + '.ydk')
+            time.sleep(0.5)
+            print('')
+            deck = get_deck_list(deck_name)
+            if deck:
+                if deck_name == 'allfields':
+                    download(deck,
+                             'https://storage.googleapis.com/ygoprodeck.com/pics_artgame/',
+                             'pics/field/',
+                             '.png')
+                else:
+                    download(deck)
+            done = True
+
+    # Exit
     print('')
-    deck = get_deck_list(deck_name)
-    if deck:
-        download(deck, len(deck))
-    tick = 5
-    print('')
-    while tick != 0:
-        print("Finished. Exiting in " + str(tick) + " seconds...", end="\r")
-        tick -= 1
+    while exit_tick != 0:
+        print('Finished. Exiting in ' + str(exit_tick) + ' seconds...', end='\r')
+        exit_tick -= 1
         time.sleep(1)
 
 
