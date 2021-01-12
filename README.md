@@ -17,8 +17,8 @@ The size of a standart card pic is 177x254 that downloads automaticaly when you 
 - I recommend you delete all cards pics before you do what follow;
 - Download [allcards.ydk](allcards.ydk) file;
 - Drop it into your game's deck folder;
-- Open the program and insert allcards;
-- Wait until done. It can take a while because there are more than nine thousant cards.
+- Open the program and insert: *allcards*;
+- Wait until done. It can take a while because it's over nine thousand cards.
 
 ### You can help me:
 With the release of new cards, two problems appear:
