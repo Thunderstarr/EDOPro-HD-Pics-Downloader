@@ -25,7 +25,7 @@ The size of a standart card pic is 177x254 that downloads automaticaly when you 
 - Wait until done. It can take a while because it's over nine thousand cards.
 
 ### Download all fields artworks (tcg/ocg):
-- I recommend you delete all cards pics before you do what follow;
+- I recommend you delete all fields artworks before you do what follow;
 - Open the program and insert the command: */allfields*;
 
 ### You can help me:
