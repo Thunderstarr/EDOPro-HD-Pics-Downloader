@@ -11,14 +11,15 @@ def get_deck_list(deck_name):
     except FileNotFoundError:
         print('Deck not found')
         return False
-    deck.remove("#main\n")
+    '''deck.remove("#main\n")
     deck.remove("#extra\n")
-    deck.remove("!side\n")
+    deck.remove("!side\n")'''
+
     aux = []
     for card in deck:
         code = card[:-1]
         aux.append(code)
-    deck = aux[1:]
+    deck = aux
     return deck
 
 
