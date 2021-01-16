@@ -3,6 +3,8 @@
 from urllib import request, error
 import time
 
+code_blacklist = ('#main', '!side', '#extra')
+
 
 def get_deck_list(deck_name):
     """Returns a list of all cards code from a ydk file"""
@@ -11,15 +13,12 @@ def get_deck_list(deck_name):
     except FileNotFoundError:
         print('Deck not found')
         return False
-    '''deck.remove("#main\n")
-    deck.remove("#extra\n")
-    deck.remove("!side\n")'''
-
     aux = []
     for card in deck:
         code = card[:-1]
-        aux.append(code)
-    deck = aux
+        if code not in code_blacklist:
+            aux.append(code)
+    deck = aux[1:]
     return deck
 
 
@@ -29,16 +28,20 @@ def download(deck: list,
              final_extension='.jpg'):
     """Recieves a list and downloads the cards pics"""
     deck_size, counter = len(deck), 0
-    for card in deck:
-        try:
-            request.urlretrieve(database_url + card + ".jpg",
-                                folder + card + final_extension)
-        except error.HTTPError:
-            pass
-        counter += 1
-        print("Downloading... (" + str(counter) + "/" + str(deck_size) + ") [" +
-              str(round(counter / deck_size * 100)) + "%]", end='\r')
-        time.sleep(0.04)
+    try:
+        for card in deck:
+            try:
+                request.urlretrieve(database_url + card + ".jpg",
+                                    folder + card + final_extension)
+            except error.HTTPError:
+                pass
+            counter += 1
+            print("Downloading... (" + str(counter) + "/" + str(deck_size) + ") [" +
+                  str(round(counter / deck_size * 100)) + "%]", end='\r')
+            time.sleep(0.04)
+    except ConnectionResetError:
+        print('\nA connection error has occurred. Retrying...\n')
+        download(deck[counter:], database_url, folder, final_extension)
     print('')
 
 
@@ -52,11 +55,11 @@ def main(exit_tick: int = 5):
     # Input
     done = False
     while not done:
-        deck_name = input("Insert deck name (without .ydk) or command: ")
+        deck_name = input('Insert deck name (without .ydk) or command: ')
         if deck_name == '/help':
             print('\nCommands:')
-            print(" /allcards to download all cards pics")
-            print(" /allfields to download all fields artworks")
+            print(' /allcards to download all cards pics')
+            print(' /allfields to download all fields artworks')
             print(' /exit to exit\n')
         elif deck_name == '/exit':
             done = True
