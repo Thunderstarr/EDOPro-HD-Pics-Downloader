@@ -35,5 +35,3 @@ The size of a standart card pic is 177x254 that downloads automaticaly when you 
 With the release of new cards, two problems appear:
 - The allcards.ydk don't cover all cards;
 - The card's name can change from OCG to TCG (The game considers TCG name as default);
-
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](xxalexcreeperxx@gmail.com)
