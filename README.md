@@ -1,5 +1,3 @@
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](xxalexcreeperxx@gmail.com)
-
 # [EDOPro/Ygopro](https://discord.gg/ygopro-percy) hd cards downloader
 
 This program automamize the process of acess [YGO Cards Databese](https://db.ygoprodeck.com/), choose of a card you want a better resolution pic, download the image and put it into your game's pics folder. The method is simple, a python script gets a list of cards ids in a ydk file and use link manipulation to download card per card directly into the pics folder. I pretend to expand this project to a deck containing all tcg/ocg cards and adjust the algorithim to download field's image too.
@@ -37,3 +35,5 @@ The size of a standart card pic is 177x254 that downloads automaticaly when you 
 With the release of new cards, two problems appear:
 - The allcards.ydk don't cover all cards;
 - The card's name can change from OCG to TCG (The game considers TCG name as default);
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](xxalexcreeperxx@gmail.com)
