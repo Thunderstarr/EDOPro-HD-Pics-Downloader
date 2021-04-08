@@ -12,7 +12,6 @@ The size of a standart card pic is 177x254 that downloads automaticaly when you 
 - Double-click exe or py file;
 ## Now with an Interface! 
 ![interface img](https://i.ibb.co/jgvxBHQ/hdcd-print.png)
-A versão 2.0 agora conta com uma interface interativa.
 
 ### Features:
 - **Download all cards pics**. It may take a while since is over 9000 cards;
