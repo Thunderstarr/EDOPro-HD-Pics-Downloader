@@ -1,35 +1,24 @@
 # [EDOPro/Ygopro](https://discord.gg/ygopro-percy) hd cards downloader
 
-This program automamize the process of acess [YGO Cards Databese](https://db.ygoprodeck.com/), choose of a card you want a better resolution pic, download the image and put it into your game's pics folder. The method is simple, a python script gets a list of cards ids in a ydk file and use link manipulation to download card per card directly into the pics folder. I pretend to expand this project to a deck containing all tcg/ocg cards and adjust the algorithim to download field's image too.
+This program automamize the process of acess [YGO Cards Databese](https://db.ygoprodeck.com/), choose of a card you want a better resolution pic, download the image and put it into your game's pics folder. The method is simple, a python script gets a list of cards ids in a ydk file and use link manipulation to download card per card directly into the pics folder.
 
 ![card comparison](https://i.ibb.co/Y49skyJ/card-comparison.png)
 
 The size of a standart card pic is 177x254 that downloads automaticaly when you open the game, the pics you download with this program has the resolution of 421x614 or 139% larger and 142% taller. This upscale helps with runing your game in fullscreen.
 
 ### Instalation:
-- Download [exe](hd_cards_downloader.exe) (~5 MB) or [py](hd_cards_downloader.py) (1 kb) if you have python 3 installed in your computer;
-- Extract to your EDOPro folder;
+- Download [exe](hd_cards_dwnlder.exe) (~26 MB) or [py](hd_cards_dwnlder.py) (~22 kb) if you have python 3 and pygame 2 installed in your computer;
+- Copy the file into your game folder;
 - Double-click exe or py file;
-- Insert a valid deck name (without .ydk);
-- If you are in deck edit screen, just get back to main menu to reload the pics;
+## Now with an Interface! 
+![interface img](https://i.ibb.co/jgvxBHQ/hdcd-print.png)
+A versão 2.0 agora conta com uma interface interativa.
 
-### Commands!:
-- */help* to see all commands;
-- */allcards* to download all cards pics;
-- */allfields* to download all fields artworks;
-- */exit to exit*
-
-### Download all cards pics (tgc/ocg):
-- I recommend you delete all cards pics before you do what follow;
-- Open the program and insert the command: */allcards*;
-- Wait until done. It can take a while because it's over nine thousand cards.
-
-### Download all fields artworks (tcg/ocg):
-- I recommend you delete all fields artworks before you do what follow;
-- Open the program and insert the command: */allfields*;
-
-### Future features:
-- Tokens also in HD. A large part is available in the database and a generic token will be downloaded if it is not there. The problem is storing a deck with a token, the game automatically deletes them, making it difficult to test.
+### Features:
+- **Download all cards pics**. It may take a while since is over 9000 cards;
+- **Download all fields artworks**;
+- **Download all new cards**. New cards added to * allcards.ydk * since the last update ;
+- **Download deck's cards pics**. Dev disappeared and new lowres cards still popping-up? You can put it all in a deck and use this feature.
 
 ### You can help me:
 With the release of new cards, two problems appear:
