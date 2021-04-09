@@ -20,9 +20,5 @@ The size of a standart card pic is 177x254 that downloads automaticaly when you 
 - **Download deck's cards pics**. Dev disappeared and new lowres cards still popping-up? You can put it all in a deck and use this feature.
 
 ### You can help me:
-With the release of new cards, two problems appear:
-- The allcards.ydk don't cover all cards;
-- The card's name can change from OCG to TCG (The game considers TCG name as default);
-- Or donate:
-
-  [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate?hosted_button_id=L53Z8HUNP7X66)
+- Open a Issue if you have problems;
+- Or donate: [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate?hosted_button_id=L53Z8HUNP7X66)
