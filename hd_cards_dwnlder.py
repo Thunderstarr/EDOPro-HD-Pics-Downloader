@@ -1,17 +1,13 @@
 """
 Created by Alexsander Rosante
 """
-
 import pygame
 from pygame.locals import *
 from urllib import request, error
-import webbrowser
-import os
+from webbrowser import open as url_open
+from os import remove as os_remove
 
-version = '2.0'
-
-font_directory = 'font/'  # No uses
-icon_directory = 'img/icon/'  # No uses
+version = '2.1'
 
 # Resources
 request.urlretrieve('https://i.ibb.co/ryjynsw/mini-icon.png', 'hdcd_icon.png')
@@ -24,7 +20,7 @@ class App:
         pygame.init()
         # display
         self.display = pygame.display.set_mode((480, 260))
-        self.bg_color = (178, 97, 58)
+        self.bg_color = (30, 0, 53)
         pygame.display.set_caption('EDOPRO HD Cards Downloader ' + version)
         pygame.display.set_icon(pygame.image.load('hdcd_icon.png'))
         # events
@@ -49,7 +45,7 @@ class App:
             self.group.draw(self.display)
             pygame.display.flip()
             self.clock.tick(60)
-        os.remove('hdcd_icon.png')
+        os_remove('hdcd_icon.png')
         pygame.quit()
 
     def event_check(self):
@@ -60,6 +56,17 @@ class App:
             elif event.type == KEYUP:
                 if event.key == K_ESCAPE:
                     self.leave()
+            if event.type == KEYDOWN:
+                if inputbox.active:
+                    if event.key == K_BACKSPACE:
+                        inputbox.text = inputbox.text[:-1]
+                    else:
+                        inputbox.text += event.unicode
+            if event.type == MOUSEBUTTONDOWN:
+                if inputbox.rect.collidepoint(event.pos):
+                    inputbox.active = True
+                else:
+                    inputbox.active = False
         for event in self.inputevents:
             event()
 
@@ -75,7 +82,7 @@ class App:
             cursor = SYSTEM_CURSOR_ARROW
         pygame.mouse.set_cursor(cursor)
 
-    def get_display_center(self):
+    def get_center(self):
         return self.display.get_width() / 2, self.display.get_height() / 2
 
     def clear_collision_boxes(self):
@@ -85,23 +92,14 @@ class App:
 
 class LoadingBar(pygame.sprite.Sprite):
 
-    def __init__(self,
-                 width=560,
-                 height=80,
-                 color=(0, 255, 0),
-                 bg_color=(65, 65, 65),
-                 border_size=0,
-                 grow_vel=0,
-                 end_command=lambda: False,
-                 text_method='',
-                 text_prefix='',
-                 text_suffix='',
-                 text_size=32,
-                 max_items=1,
-                 text_pos=''):
+    def __init__(self, width=560, height=80,
+                 color=(0, 255, 0), bg_color=(65, 65, 65),
+                 text_method='', text_prefix='', text_suffix='', text_size=32, text_pos='',
+                 border_size=0, grow_vel=0, end_command=lambda: None,  max_items=1):
 
-        pygame.sprite.Sprite.__init__(self)
+        super().__init__()
 
+        # General configs
         self.color = color
         self.bg_color = bg_color
         self.border_size = border_size
@@ -157,7 +155,7 @@ class LoadingBar(pygame.sprite.Sprite):
         return '{:.1%}'.format(self.width / self.max_width)
 
     def get_items_proportion(self):
-        return '{}/{}'.format(round(self.width/self.max_width*self.max_items), self.max_items)
+        return '{}/{}'.format(round(self.width / self.max_width * self.max_items), self.max_items)
 
     def text_centered(self):
         text = '{} {} {}'.format(self.text_prefix, self.text(), self.text_suffix)
@@ -167,287 +165,119 @@ class LoadingBar(pygame.sprite.Sprite):
 
 
 class Button(pygame.sprite.Sprite):
-
-    def __init__(self,
-                 game,
-                 width=0,
-                 height=0,
-                 depth=10,
-                 color=(178, 34, 34),
-                 color_above=(193, 78, 78),
-                 color_pressed=(142, 27, 27),
-                 color_below=(65, 65, 65),
-                 text='',
-                 text_size=0,
-                 text_color=(255, 255, 255),
-                 text_font='',
-                 text_sysfont='',
-                 text_at_left=False,
-                 text_at_right=False,
-                 aatext=True,
-                 icon='',
-                 icon_size=0,
-                 icon_fit=False,
-                 icon_centered=True,
-                 icon_at_left=True,
-                 command=lambda: None,
-                 interactive=True):
-        pygame.sprite.Sprite.__init__(self)
-        self.game = game
-
-        self.command = command
-
-        if width <= 0:
-            width = 240
-        if height <= 0:
-            height = 60
-        border_dist = 5
-
-        # transparent bg
-        self.image = pygame.Surface((width, height + depth), SRCALPHA)
+    def __init__(self, text, command):
+        super().__init__()
+        # General config
+        self.image = pygame.Surface((150, 40))
         self.rect = self.image.get_rect()
-
-        # idle surf
-        front = pygame.Surface((width, height))
-        front.fill(color)
-        front_rect = front.get_rect(top=depth)
-        above = pygame.Surface((width, depth))
-        above.fill(color_above)
-        above_rect = above.get_rect()
-        self.idle_surf = self.image.copy()
-        self.idle_surf.blit(front, front_rect)
-        self.idle_surf.blit(above, above_rect)
-
-        # pushed surf
-        front.fill(color_pressed)
-        front_rect.top = 0
-        below = pygame.Surface((width, depth))
-        below.fill(color_below)
-        below_rect = below.get_rect(top=height)
-        self.pressed_surf = self.image.copy()
-        self.pressed_surf.blit(front, front_rect)
-        self.pressed_surf.blit(below, below_rect)
-
-        # text and icon
-        text_surf = pygame.Surface((1, 1))
-        if text:
-            # create text surf
-            if not text_size:
-                text_size = round(8 / 15 * height)
-            # font load
-            font = pygame.font.SysFont('Arial', text_size)
-            if text_font:
-                try:
-                    font = pygame.font.Font('{0}{1}.ttf'.format(font_directory, text_font), text_size)
-                except FileNotFoundError:
-                    pass
-            elif text_sysfont:
-                font = pygame.font.SysFont(text_sysfont, text_size)
-
-            text_surf = font.render(text, aatext, text_color)
-
-        if icon:
-            # create icon surf
-            try:
-                icon_surf = pygame.image.load('{0}{1}.png'.format(icon_directory, icon))
-            except FileNotFoundError:
-                icon_surf = pygame.Surface((10, 10), SRCALPHA)
-            # resize icon surf to fit at button and create it's rect
-            if not icon_size:
-                icon_fit = True
-            if icon_fit:
-                if width > height:
-                    icon_size = round(height - 2 * border_dist)
-                else:
-                    icon_size = round(width - 2 * border_dist)
-            icon_surf = pygame.transform.smoothscale(icon_surf.copy(),
-                                                     [icon_size for _ in range(2)])
-            # icon_rect
-            icon_rect = icon_surf.get_rect()
-
-            if text:
-                # resize text surf, if needed, to fit at button with icon surf
-                text_size = width - icon_size - 3 * border_dist
-                if text_surf.get_width() > text_size:
-                    text_surf = pygame.transform.scale(text_surf.copy(),
-                                                       (text_size, text_surf.get_height()))
-                # text_rect
-                text_rect = text_surf.get_rect()
-                # icon and text position set
-                for j in ((self.idle_surf, depth), (self.pressed_surf, 0)):
-                    front_rect.top = j[1]
-                    if icon_at_left:
-                        icon_rect.left = border_dist
-                        text_rect.centerx = width - text_size / 2 - border_dist
-                    else:
-                        icon_rect.right = width - border_dist
-                        text_rect.centerx = text_size / 2 + border_dist
-                    icon_rect.centery = front_rect.centery
-                    text_rect.centery = front_rect.centery
-                    j[0].blit(icon_surf, icon_rect)
-                    j[0].blit(text_surf, text_rect)
-            else:
-                # icon surf position set
-                for j in ((self.idle_surf, depth), (self.pressed_surf, 0)):
-                    front_rect.top = j[1]
-                    if icon_centered:
-                        icon_rect.centerx = front_rect.centerx
-                    elif icon_at_left:
-                        icon_rect.left = border_dist
-                    else:
-                        icon_rect.right = width - border_dist
-                    icon_rect.centery = front_rect.centery
-                    j[0].blit(icon_surf, icon_rect)
-
-        elif text:
-            # resize text surf, if needed
-            text_size = width - 2 * border_dist
-            if text_surf.get_width() > text_size:
-                text_surf = pygame.transform.scale(text_surf.copy(),
-                                                   (text_size, text_surf.get_height()))
-            # text rect
-            text_rect = text_surf.get_rect()
-            # text surf position set
-            for j in ((self.idle_surf, depth), (self.pressed_surf, 0)):
-                front_rect.top = j[1]
-                if text_at_left:
-                    text_rect.left = border_dist
-                elif text_at_right:
-                    text_rect.right = front_rect.right - border_dist
-                else:
-                    text_rect.centerx = front_rect.centerx
-                text_rect.centery = front_rect.centery
-                j[0].blit(text_surf, text_rect)
-
-        # interaction
-        self.interaction = lambda: None
-        if interactive:
-            self.interaction = self.interactive
-            self.game.button_collision = pygame.sprite.Group()
-
-        self.image = self.idle_surf.copy()
+        self.border_radius = 0
+        self.command = command
+        # Color
+        self.color = (128, 0, 128)
+        # Text
+        self.text = text
+        self.font = pygame.font.SysFont('Arial', 20)
 
     def update(self):
-        self.interaction()
+        self.image.fill(app.bg_color)
+        self.event_check()
+        # Box
+        self.calculate_border_radius()
+        pygame.draw.rect(self.image, self.color, (0, 0, 150, 40), 0, self.border_radius)
+        # Text
+        text = self.font.render(self.text, True, Color('white'))
+        text_rect = text.get_rect(center=(75, 20))
+        self.image.blit(text, text_rect)
 
-    def interactive(self):
-        mouse_pos = pygame.mouse.get_pos()
-        if self.rect.collidepoint(mouse_pos):
-            self.game.button_collision.add(self)
-            for event in self.game.events:
-                if event.type == MOUSEBUTTONDOWN:
-                    self.image = self.pressed_surf.copy()
-                elif event.type == MOUSEBUTTONUP:
+    def event_check(self):
+        for event in app.events:
+            if event.type == MOUSEBUTTONDOWN:
+                if self.rect.collidepoint(event.pos):
                     self.command()
-                    self.image = self.idle_surf.copy()
+
+    def calculate_border_radius(self, max_radius=16, grow_vel=2):
+        if self.rect.collidepoint(pygame.mouse.get_pos()):
+            app.button_collision.add(self)
+            if self.border_radius < max_radius:
+                self.border_radius += grow_vel
         else:
-            self.image = self.idle_surf.copy()
-            self.game.button_collision.remove(self)
+            app.button_collision.remove(self)
+            if self.border_radius > 0:
+                self.border_radius -= grow_vel
+
+
+class Text(pygame.sprite.Sprite):
+    def __init__(self, text):
+        super().__init__()
+        font = pygame.font.SysFont('Consolas', 22)
+        self.image = font.render(text, True, Color('white'))
+        self.rect = self.image.get_rect()
 
 
 class InputBox(pygame.sprite.Sprite):
-
-    def __init__(self,
-                 game,
-                 width=240,
-                 height=60,
-                 inputext_color=(0, 0, 0),
-                 inputbox_color=(255, 255, 255),
-                 border_size=3,
-                 border_color=(128, 128, 128),
-                 previewtext='',
-                 password_mode=False):
-        pygame.sprite.Sprite.__init__(self)
-        self.game = game
-
-        # configs
-        self.height = height
-        self.border_color = border_color
-        self.password_mode = password_mode
-        self.game.inputbox_collision = pygame.sprite.Group()
-
-        # bg
-        self.image = pygame.Surface((width, height))
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.Surface((400, 50))
         self.rect = self.image.get_rect()
-
-        # box
-        self.box = pygame.Surface((width - 2 * border_size,
-                                   height - 2 * border_size))
-        self.box.fill(inputbox_color)
-        self.box_rect = self.box.get_rect(left=border_size,
-                                          centery=height / 2)
-
-        # input text
-        self.font = pygame.font.SysFont('Consolas', 32)
+        self.active = False
+        # Text
+        self.font = pygame.font.SysFont('Consolas', 30)
         self.text = ''
-        self.blitable_text = str(self.text)
-
+        # Border
+        self.border_size = 5
+        self.color_active = (0, 0, 255)
+        self.color_passive = (43, 43, 43)
+        # Innerbox
+        self.innerbox = pygame.Surface((self.rect.w - self.border_size * 2,
+                                        self.rect.h - self.border_size * 2))
         # caret
-        self.caret = self.Carret(self.font.get_height(), inputext_color, inputbox_color)
-
-        # preview text
-        self.previewtext = self.font.render(previewtext, True, inputext_color)
-        self.previewtext.set_alpha(128)
+        self.caret = self.Caret(self.font)
 
     def update(self):
-        self.image.fill(self.border_color)
-        self.input_check()
-        box = self.box.copy()
-
-        # text
-        text = self.font.render(self.blitable_text, True, (0, 0, 0))
-        if text.get_width() < box.get_width():
-            text_rect = text.get_rect(midleft=(5, box.get_height() / 2))
+        if self.active:
+            self.image.fill(self.color_active)
         else:
-            text_rect = text.get_rect(midright=(box.get_width() - 5, box.get_height() / 2))
+            self.image.fill(self.color_passive)
+        self.update_innerbox()
+        self.image.blit(self.innerbox, 2 * [self.border_size])
+
+    def update_innerbox(self):
+        self.innerbox.fill(Color('white'))
+        # Text
         if self.text:
-            box.blit(text, text_rect)
+            text = self.font.render(self.text, True, (0, 0, 0))
+            text_rect = text.get_rect(topleft=(5, 5))
+            if text.get_width() > self.innerbox.get_width():
+                text_rect = text.get_rect(top=5)
+                text_rect.right = self.innerbox.get_width() - 10
         else:
-            box.blit(self.previewtext, text_rect)
+            text = self.font.render('Deck name', True, (128, 128, 128))
+            text_rect = text.get_rect(topleft=(10, 5))
+        self.innerbox.blit(text, text_rect)
+        # carret
+        if self.active:
+            self.caret.draw(self.text, text_rect, self.innerbox)
 
-        # caret
-        self.caret.rect.midleft = text_rect.midright
-        self.caret.update()
-        box.blit(self.caret.image, self.caret.rect)
-
-        self.image.blit(box, self.box_rect)
-
-    def input_check(self):
-        if self.rect.collidepoint(pygame.mouse.get_pos()):
-            self.game.inputbox_collision.add(self)
-            for event in self.game.events:
-                if event.type == KEYDOWN:
-                    if event.key == K_BACKSPACE:
-                        self.text = self.text[:-1]
-                    else:
-                        self.text += event.unicode
-            if self.password_mode:
-                self.blitable_text = len(self.text) * '*'
-            else:
-                self.blitable_text = str(self.text)
-        else:
-            self.game.inputbox_collision.remove(self)
-
-    def clean(self):
-        self.text = ''
-        self.blitable_text = str(self.text)
-
-    class Carret(pygame.sprite.Sprite):
-        def __init__(self, font_height, inputext_color, inputbox_color):
-            pygame.sprite.Sprite.__init__(self)
-            self.visible_color, self.hidden_color = inputext_color, inputbox_color
-            self.image = pygame.Surface((3, font_height))
-            self.rect = self.image.get_rect()
+    class Caret:
+        def __init__(self, font):
+            self.font = font
             self.frame = 0
 
-        def update(self, blinkspeed=1):
-            if self.frame < 30:
-                self.image.fill(self.visible_color)
-            elif self.frame < 60:
-                self.image.fill(self.hidden_color)
-            else:
+        def draw(self, text, text_rect, box):
+            image = self.font.render('|', True, self.color())
+            rect = image.get_rect(topleft=(0, 5))
+            if text:
+                rect.left = text_rect.right - 5
+            box.blit(image, rect)
+
+        def color(self, blink_speed=1):
+            color = Color('black')
+            if 30 < self.frame <= 60:
+                color = Color('white')
+            elif self.frame > 60:
                 self.frame = 0
-            self.frame += blinkspeed
+            self.frame += blink_speed
+            return color
 
 
 if __name__ == '__main__':
@@ -469,14 +299,6 @@ if __name__ == '__main__':
             else:
                 app.group.remove(btn_download)
                 app.group.add(btn_allcards, btn_allfields, btn_newcards)
-
-
-    @inputevent
-    def pressed_key_outside():
-        if not download_mode:
-            for event in app.events:
-                if event.type == KEYDOWN:
-                    pygame.mouse.set_pos((inputbox.rect.left + 5, inputbox.rect.centery))
 
 
     def call_download_ui():
@@ -545,7 +367,7 @@ if __name__ == '__main__':
         global deck, counter
         # change ui elements
         app.group.remove(*download_ui[:-2])
-        app.group.add(txt_download_done, btn_continue)
+        app.group.add(txt_dwnld_done, btn_continue)
         # resets
         app.inputevents = app.inputevents[:-1]
         deck, counter = [], 0
@@ -570,67 +392,42 @@ if __name__ == '__main__':
     # Parameters
     deck, counter = [], 0
     download_mode = 0
-    btns_default = {'game': app, 'width': 160, 'height': 40, 'depth': 6, 'color': (102, 55, 33),
-                    'color_above': (253, 230, 138), 'color_pressed': (102, 55, 33), 'text_sysfont': 'Consolas'}
-    txts_default = {'game': app, 'color': (102, 55, 33), 'text_sysfont': 'Consolas', 'interactive': False}
 
-    # Objects
-    # General UI:
-    btn_git = Button(app,
-                     width=40,
-                     height=40,
-                     depth=4,
-                     text='Git',
-                     command=lambda: webbrowser.open('http://tinyurl.com/yufb2ucj'))
-    # rects
-    '''txt_devname.rect.bottomright = btn_git.rect.bottomleft'''
-    btn_git.rect.bottomright = app.display.get_width() - 5, app.display.get_height() - 5
-    # ui list
-    '''general_ui = [txt_devname, btn_git]'''
-    general_ui = [btn_git]
+    # Input Box
+    inputbox = InputBox()
 
-    # Input UI:
-    inputbox = InputBox(app, 400, 50, previewtext='Deck name')
-    btn_allcards = Button(text='All Cards', command=lambda: download_setup('allcards'), **btns_default)
-    btn_allfields = Button(text='All Fields', command=lambda: download_setup('allfields'), **btns_default)
-    btn_download = Button(text='Download', command=download_setup, **btns_default)
-    btn_newcards = Button(text='New Cards', command=lambda: download_setup('newcards'), **btns_default)
-    txt_ydk = Button(
-        game=app,
-        width=70,
-        height=inputbox.image.get_height(),
-        depth=0,
-        text='.ydk',
-        text_sysfont='Consolas',
-        color=app.bg_color,
-        interactive=False
-    )
-    # rects
-    inputbox.rect.midleft = 5, app.get_display_center()[1]
-    btn_download.rect.centerx = app.get_display_center()[0]
-    btn_download.rect.top = inputbox.rect.bottom + 8
-    txt_ydk.rect.midleft = inputbox.rect.midright
-    last_right = 0
-    for i in (btn_newcards, btn_allcards, btn_allfields):
-        i.rect.left = last_right
-        last_right = i.rect.right + 3
-    # ui list
-    input_ui = [inputbox, txt_ydk, btn_allcards, btn_allfields, btn_newcards, btn_download]
+    # Buttons
+    btn_git = Button('Git', lambda: url_open('http://tinyurl.com/yufb2ucj'))
+    btn_allcards = Button('All Cards', lambda: download_setup('allcards'))
+    btn_allfields = Button('All Fields', lambda: download_setup('allfields'))
+    btn_download = Button('Download', download_setup)
+    btn_newcards = Button('New Cards', lambda: download_setup('newcards'))
+    btn_continue = Button('Continue', call_input_ui)
 
-    # Download UI:
+    # Texts
+    txt_ydk = Text('.ydk')
+    txt_dwnld_done = Text('Download Completed!')
+
+    # Bar
     download_bar = LoadingBar(460, 60, (29, 158, 116), border_size=3, text_method='item',
                               end_command=complete_download)
-    btn_continue = Button(text='Continue', command=call_input_ui, **btns_default)
-    txt_download_done = Button(app, width=480, depth=0, text='Download Completed!', text_sysfont='Consolas',
-                               color=app.bg_color, interactive=False)
-    # rects
-    download_bar.rect.center = app.get_display_center()
-    txt_download_done.rect.midbottom = app.display.get_width() / 2, app.display.get_height() / 2 - 10
-    btn_continue.rect.midtop = txt_download_done.rect.centerx, txt_download_done.rect.bottom + 20
-    # ui list
-    download_ui = [download_bar, txt_download_done, btn_continue]
-    # }
 
+    # Rects
+    btn_git.rect.bottomright = app.display.get_width() - 5, app.display.get_height() - 5
+    inputbox.rect.midleft = 5, app.get_center()[1]
+    btn_download.rect.midtop = inputbox.rect.centerx, inputbox.rect.bottom + 8
+    txt_ydk.rect.midleft = inputbox.rect.midright
+    btn_allcards.rect.midtop = app.get_center()[0], 5
+    btn_newcards.rect.topright = btn_allcards.rect.left - 3, 5
+    btn_allfields.rect.topleft = btn_allcards.rect.right + 3, 5
+    download_bar.rect.center = app.get_center()
+    txt_dwnld_done.rect.midbottom = app.display.get_width() / 2, app.display.get_height() / 2 - 10
+    btn_continue.rect.midtop = txt_dwnld_done.rect.centerx, txt_dwnld_done.rect.bottom + 20
+
+    # Lists
+    input_ui = [inputbox, txt_ydk, btn_allcards, btn_allfields, btn_newcards, btn_download]
+    download_ui = [download_bar, txt_dwnld_done, btn_continue]
+    general_ui = [btn_git]
     app.group.add(*general_ui, *input_ui[:-1])
 
     app.run()
