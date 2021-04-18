@@ -1,5 +1,7 @@
 # [EDOPro/Ygopro](https://discord.gg/ygopro-percy) hd cards downloader
 
+:warning: The exe file is too large to upload to this repository. You can download it from [here](https://drive.google.com/file/d/1qqdYjgaXQtxRGRcwGoeS44-9xHYHQBGe/view?usp=sharing).
+
 This program automamize the process of acess [YGO Cards Database](https://db.ygoprodeck.com/), choose of a card you want a better resolution pic, download the image and put it into your game's pics folder. The method is simple, a python script gets a list of cards ids in a ydk file and use link manipulation to download card per card directly into the pics folder.
 
 ![card comparison](https://i.ibb.co/Y49skyJ/card-comparison.png)
@@ -18,6 +20,11 @@ The size of a standart card pic is 177x254 that downloads automaticaly when you 
 - **Download all fields artworks**;
 - **Download all new cards**. New cards added to * allcards.ydk * since the last update ;
 - **Download deck's cards pics**. Dev disappeared and new lowres cards still popping-up? You can put it all in a deck and use this feature.
+
+### Version 2.1 is out, but only for py
+![v21](https://i.ibb.co/h9cBCvN/hdcdwnlder-print2.png)
+
+This version is 200 lines shorter than the 2.0, but the interface is simpler and there's few things to fix.   
 
 ### You can help me:
 - Open a Issue if you have problems;
