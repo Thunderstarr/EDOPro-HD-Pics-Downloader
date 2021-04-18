@@ -1,17 +1,24 @@
-"""
-Created by Alexsander Rosante
-"""
+"""Created by Alexsander Rosante 2021"""
 import pygame
 from pygame.locals import *
 from urllib import request, error
-from webbrowser import open as url_open
-from os import remove as os_remove
+import webbrowser
+import os
+import sys
 
-version = '2.1'
+version = '2.1.1'
 
 # Resources
 request.urlretrieve('https://i.ibb.co/ryjynsw/mini-icon.png', 'hdcd_icon.png')
 pygame.time.wait(1)
+
+# Colors
+BG_COLOR = (227, 227, 233)
+BTN_COLOR = (79, 85, 124)
+BTN_TXT_COLOR = (227, 227, 233)
+BTN_TXT_HOVERED_COLOR = (227, 119, 174)
+TXT_COLOR = (40, 40, 41)
+DWNLDBAR_COLOR = (56, 98, 150)
 
 
 class App:
@@ -20,7 +27,7 @@ class App:
         pygame.init()
         # display
         self.display = pygame.display.set_mode((480, 260))
-        self.bg_color = (30, 0, 53)
+        self.bg_color = BG_COLOR
         pygame.display.set_caption('EDOPRO HD Cards Downloader ' + version)
         pygame.display.set_icon(pygame.image.load('hdcd_icon.png'))
         # events
@@ -45,20 +52,18 @@ class App:
             self.group.draw(self.display)
             pygame.display.flip()
             self.clock.tick(60)
-        os_remove('hdcd_icon.png')
-        pygame.quit()
+        self.leave_game()
 
     def event_check(self):
         self.events = pygame.event.get()
         for event in self.events:
             if event.type == QUIT:
-                self.leave()
-            elif event.type == KEYUP:
-                if event.key == K_ESCAPE:
-                    self.leave()
+                self.leave_game()
             if event.type == KEYDOWN:
                 if inputbox.active:
-                    if event.key == K_BACKSPACE:
+                    if event.key == K_ESCAPE:
+                        inputbox.text = ''
+                    elif event.key == K_BACKSPACE:
                         inputbox.text = inputbox.text[:-1]
                     else:
                         inputbox.text += event.unicode
@@ -69,9 +74,6 @@ class App:
                     inputbox.active = False
         for event in self.inputevents:
             event()
-
-    def leave(self):
-        self.loop = False
 
     def cursor_by_context(self):
         if len(self.button_collision) > 0:
@@ -88,6 +90,12 @@ class App:
     def clear_collision_boxes(self):
         self.button_collision.empty()
         self.inputbox_collision.empty()
+
+    @staticmethod
+    def leave_game():
+        os.remove('hdcd_icon.png')
+        pygame.quit()
+        sys.exit()
 
 
 class LoadingBar(pygame.sprite.Sprite):
@@ -165,53 +173,70 @@ class LoadingBar(pygame.sprite.Sprite):
 
 
 class Button(pygame.sprite.Sprite):
-    def __init__(self, text, command):
+    def __init__(self, text, command, width=150):
         super().__init__()
         # General config
-        self.image = pygame.Surface((150, 40))
+        self.width = width
+        self.image = pygame.Surface((self.width, 40))
         self.rect = self.image.get_rect()
         self.border_radius = 0
         self.command = command
         # Color
-        self.color = (128, 0, 128)
+        self.color = BTN_COLOR
         # Text
         self.text = text
-        self.font = pygame.font.SysFont('Arial', 20)
+        self.font = pygame.font.SysFont('Consolas', 21)
+        self.text_color_idle = BTN_TXT_COLOR
+        self.text_color_hovered = BTN_TXT_HOVERED_COLOR
+        self.text_color = self.text_color_idle
 
-    def update(self):
+    def update(self, max_radius=12, grow_vel=2):
         self.image.fill(app.bg_color)
-        self.event_check()
-        # Box
-        self.calculate_border_radius()
-        pygame.draw.rect(self.image, self.color, (0, 0, 150, 40), 0, self.border_radius)
-        # Text
-        text = self.font.render(self.text, True, Color('white'))
-        text_rect = text.get_rect(center=(75, 20))
-        self.image.blit(text, text_rect)
-
-    def event_check(self):
-        for event in app.events:
-            if event.type == MOUSEBUTTONDOWN:
-                if self.rect.collidepoint(event.pos):
-                    self.command()
-
-    def calculate_border_radius(self, max_radius=16, grow_vel=2):
         if self.rect.collidepoint(pygame.mouse.get_pos()):
+            for event in app.events:
+                if event.type == MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        self.command()
+                        return
             app.button_collision.add(self)
+            self.text_color = self.text_color_hovered
             if self.border_radius < max_radius:
                 self.border_radius += grow_vel
         else:
             app.button_collision.remove(self)
+            self.text_color = self.text_color_idle
             if self.border_radius > 0:
                 self.border_radius -= grow_vel
+        # Box
+        pygame.draw.rect(self.image, self.color, (0, 0, self.width, 40), 0, self.border_radius)
+        # Text
+        text = self.font.render(self.text, True, self.text_color)
+        text_rect = text.get_rect(center=(self.width / 2, 20))
+        self.image.blit(text, text_rect)
 
 
 class Text(pygame.sprite.Sprite):
     def __init__(self, text):
         super().__init__()
         font = pygame.font.SysFont('Consolas', 22)
-        self.image = font.render(text, True, Color('white'))
+        self.image = font.render(text, True, TXT_COLOR)
         self.rect = self.image.get_rect()
+
+
+class WarningText(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.font = pygame.font.SysFont('Consolas', 23)
+        self.image = self.font.render('! Deck not found !', True, (255, 0, 0))
+        self.rect = self.image.get_rect(midbottom=inputbox.rect.midtop)
+        self.rect.bottom -= 5
+        self.alpha = 255
+
+    def update(self, fadeout_vel=2):
+        if self.alpha <= 0:
+            self.kill()
+        self.image.set_alpha(self.alpha)
+        self.alpha -= fadeout_vel
 
 
 class InputBox(pygame.sprite.Sprite):
@@ -224,8 +249,8 @@ class InputBox(pygame.sprite.Sprite):
         self.font = pygame.font.SysFont('Consolas', 30)
         self.text = ''
         # Border
-        self.border_size = 5
-        self.color_active = (0, 0, 255)
+        self.border_size = 3
+        self.color_active = (255, 215, 0)
         self.color_passive = (43, 43, 43)
         # Innerbox
         self.innerbox = pygame.Surface((self.rect.w - self.border_size * 2,
@@ -234,6 +259,7 @@ class InputBox(pygame.sprite.Sprite):
         self.caret = self.Caret(self.font)
 
     def update(self):
+        self.hovered_check()
         if self.active:
             self.image.fill(self.color_active)
         else:
@@ -257,6 +283,18 @@ class InputBox(pygame.sprite.Sprite):
         # carret
         if self.active:
             self.caret.draw(self.text, text_rect, self.innerbox)
+
+    def hovered_check(self):
+        if self.rect.collidepoint(pygame.mouse.get_pos()):
+            if self.active:
+                app.button_collision.remove(self)
+                app.inputbox_collision.add(self)
+            else:
+                app.inputbox_collision.remove(self)
+                app.button_collision.add(self)
+        else:
+            app.button_collision.remove(self)
+            app.inputbox_collision.remove(self)
 
     class Caret:
         def __init__(self, font):
@@ -305,6 +343,7 @@ if __name__ == '__main__':
         global download_mode
         download_mode = 1
         app.group.remove(*input_ui)
+        app.group.remove(*general_ui)
         app.group.add(*download_ui[:-2])
         app.clear_collision_boxes()
 
@@ -314,6 +353,7 @@ if __name__ == '__main__':
         download_mode = 0
         app.group.remove(*download_ui)
         app.group.add(*input_ui[:-1])
+        app.group.add(*general_ui)
         app.clear_collision_boxes()
 
 
@@ -330,9 +370,9 @@ if __name__ == '__main__':
             deck_name = mode
         else:
             deck_name = inputbox.text
-            inputbox.text = ''
         deck = ydk_to_list(deck_name)
         if deck:
+            inputbox.text = ''
             if mode == 'allfields':
                 dwnld_info = {'database_url': 'https://storage.googleapis.com/ygoprodeck.com/pics_artgame/',
                               'pics_folder': 'pics/field/',
@@ -344,7 +384,7 @@ if __name__ == '__main__':
             app.inputevents.append(lambda: download(**dwnld_info))
             call_download_ui()
         else:  # Deck not found
-            pass
+            app.group.add(WarningText())
 
 
     def download(database_url, pics_folder, pics_extension):
@@ -397,7 +437,7 @@ if __name__ == '__main__':
     inputbox = InputBox()
 
     # Buttons
-    btn_git = Button('Git', lambda: url_open('http://tinyurl.com/yufb2ucj'))
+    btn_git = Button('Git', lambda: webbrowser.open('http://tinyurl.com/yufb2ucj'), width=75)
     btn_allcards = Button('All Cards', lambda: download_setup('allcards'))
     btn_allfields = Button('All Fields', lambda: download_setup('allfields'))
     btn_download = Button('Download', download_setup)
@@ -409,20 +449,20 @@ if __name__ == '__main__':
     txt_dwnld_done = Text('Download Completed!')
 
     # Bar
-    download_bar = LoadingBar(460, 60, (29, 158, 116), border_size=3, text_method='item',
+    download_bar = LoadingBar(460, 60, (56, 98, 150), border_size=3, text_method='item',
                               end_command=complete_download)
 
     # Rects
-    btn_git.rect.bottomright = app.display.get_width() - 5, app.display.get_height() - 5
-    inputbox.rect.midleft = 5, app.get_center()[1]
-    btn_download.rect.midtop = inputbox.rect.centerx, inputbox.rect.bottom + 8
-    txt_ydk.rect.midleft = inputbox.rect.midright
-    btn_allcards.rect.midtop = app.get_center()[0], 5
-    btn_newcards.rect.topright = btn_allcards.rect.left - 3, 5
-    btn_allfields.rect.topleft = btn_allcards.rect.right + 3, 5
-    download_bar.rect.center = app.get_center()
-    txt_dwnld_done.rect.midbottom = app.display.get_width() / 2, app.display.get_height() / 2 - 10
-    btn_continue.rect.midtop = txt_dwnld_done.rect.centerx, txt_dwnld_done.rect.bottom + 20
+    btn_git.rect.bottomright = 475, 255
+    inputbox.rect.midleft = 5, 130
+    btn_download.rect.midtop = 205, 163
+    txt_ydk.rect.midleft = 408, 130
+    btn_allcards.rect.midtop = 240, 5
+    btn_newcards.rect.topright = 161, 5
+    btn_allfields.rect.topleft = 319, 5
+    download_bar.rect.center = 240, 130
+    txt_dwnld_done.rect.midbottom = 240, 120
+    btn_continue.rect.midtop = 240, 140
 
     # Lists
     input_ui = [inputbox, txt_ydk, btn_allcards, btn_allfields, btn_newcards, btn_download]
