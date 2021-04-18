@@ -3,10 +3,8 @@ import pygame
 from pygame.locals import *
 from urllib import request, error
 import webbrowser
-import os
-import sys
 
-version = '2.1.1'
+version = '2.1.2'
 
 # Resources
 request.urlretrieve('https://i.ibb.co/ryjynsw/mini-icon.png', 'hdcd_icon.png')
@@ -52,7 +50,7 @@ class App:
             self.group.draw(self.display)
             pygame.display.flip()
             self.clock.tick(60)
-        self.leave_game()
+        pygame.quit()
 
     def event_check(self):
         self.events = pygame.event.get()
@@ -91,11 +89,8 @@ class App:
         self.button_collision.empty()
         self.inputbox_collision.empty()
 
-    @staticmethod
-    def leave_game():
-        os.remove('hdcd_icon.png')
-        pygame.quit()
-        sys.exit()
+    def leave_game(self):
+        self.loop = False
 
 
 class LoadingBar(pygame.sprite.Sprite):

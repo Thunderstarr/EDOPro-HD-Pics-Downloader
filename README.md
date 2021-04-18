@@ -1,10 +1,5 @@
 # [EDOPro/Ygopro](https://discord.gg/ygopro-percy) hd cards downloader
 
-⚠️ Your antivirus may move it to the virus' safe. The reasons are:
-- Download files (images) from internet (Pics, Field pics, App icon);
-- Delete files from your computer (App icon when exit).
-
-
 This program automamize the process of acess [YGO Cards Database](https://db.ygoprodeck.com/), choose of a card you want a better resolution pic, download the image and put it into your game's pics folder. The method is simple, a python script gets a list of cards ids in a ydk file and use link manipulation to download card per card directly into the pics folder.
 
 ![card comparison](https://i.ibb.co/Y49skyJ/card-comparison.png)
@@ -12,7 +7,7 @@ This program automamize the process of acess [YGO Cards Database](https://db.ygo
 The size of a standart card pic is 177x254 that downloads automaticaly when you open the game, the pics you download with this program has the resolution of 421x614 or 139% larger and 142% taller. This upscale helps with runing your game in fullscreen.
 
 ### Instalation:
-- Download [exe](hd_cards_dwnlder.exe) (~10 MB) or [py](hd_cards_dwnlder.py) (~22 kb) if you have python 3 and pygame 2 installed in your computer;
+- Download exe (~10 MB) or [py](hd_cards_dwnlder.py) (~22 kb) if you have python 3 and pygame 2 installed in your computer;
 - Copy the file into your game folder;
 - Double-click exe or py file;
 ## Now with an Interface! 
