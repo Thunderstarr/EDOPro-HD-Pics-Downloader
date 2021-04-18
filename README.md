@@ -1,7 +1,7 @@
 # [EDOPro/Ygopro](https://discord.gg/ygopro-percy) hd cards downloader
 
 ⚠️ Your antivirus may move it to the virus' safe. The reasons are:
-- Downloads files (images) from internet (Pics, Field pics, App icon);
+- Download files (images) from internet (Pics, Field pics, App icon);
 - Delete files from your computer (App icon when exit).
 
 
