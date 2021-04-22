@@ -16,7 +16,7 @@ The size of a standart card pic is 177x254 that downloads automaticaly when you 
 ### Features:
 - **Download all cards pics**. It may take a while since is over 9000 cards;
 - **Download all fields artworks**;
-- **Download all new cards**. New cards added to * allcards.ydk * since the last update ;
+- **Download all new cards**. New cards added to *allcards.ydk* since the last update ;
 - **Download deck's cards pics**. Dev disappeared and new lowres cards still popping-up? You can put it all in a deck and use this feature.
 
 ### You can help me:
