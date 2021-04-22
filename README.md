@@ -19,6 +19,15 @@ The size of a standart card pic is 177x254 that downloads automaticaly when you 
 - **Download all new cards**. New cards added to *allcards.ydk* since the last update ;
 - **Download deck's cards pics**. Dev disappeared and new lowres cards still popping-up? You can put it all in a deck and use this feature.
 
+### Compatibility:
+#### 👍:
+- All released TCG/OCG cards;
+- Some pre-released (beta) TCG/OCG cards;
+- Some Rush cards;
+#### 👎:
+- Windows 7 or lower;
+- Anime/Unofficial/Custom cards;
+
 ### You can help me:
 - Open a Issue if you have problems;
 - Or donate: [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate?hosted_button_id=L53Z8HUNP7X66)
