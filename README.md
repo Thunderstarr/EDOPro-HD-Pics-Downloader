@@ -7,7 +7,7 @@ This program automamize the process of acess [YGO Cards Database](https://db.ygo
 The size of a standart card pic is 177x254 that downloads automaticaly when you open the game, the pics you download with this program has the resolution of 421x614 or 139% larger and 142% taller. This upscale helps with runing your game in fullscreen.
 
 ### Instalation:
-- Download [exe](tinyurl.com/2ju2kew9) (~10 MB) or [py](tinyurl.com/bthvbddj) (~22 kb) if you have python 3 and pygame 2 installed in your computer;
+- Download *.exe* (~10 MB) or *.py* (~22 kb) if you have python 3 and pygame 2 installed in your computer;
 - Copy the file into your game folder;
 - Double-click exe or py file;
 ## Now with an Interface! 
