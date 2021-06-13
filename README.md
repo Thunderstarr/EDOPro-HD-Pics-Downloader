@@ -1,4 +1,4 @@
-# [EDOPro/Ygopro](https://discord.gg/ygopro-percy) High Quality Pics Downloader
+# [EDOPro/Ygopro](https://discord.gg/ygopro-percy) HD Pics Downloader
 
 This program automamize the process of acess [YGO Cards Database](https://db.ygoprodeck.com/), choose of a card you want a better resolution pic, download the image and put it into your game's pics folder. The method is simple, a python script gets a list of cards ids in a ydk file and use link manipulation to download card per card directly into the pics folder.
 
