@@ -4,30 +4,32 @@ from pygame.locals import *
 from urllib import request, error
 import webbrowser
 
-version = '2.1.2'
+version = '2.1.3'
 
 # Resources
-request.urlretrieve('https://i.ibb.co/ryjynsw/mini-icon.png', 'hdcd_icon.png')
+try:
+    request.urlretrieve('https://i.ibb.co/ryjynsw/mini-icon.png', 'hdcd_icon.png')
+except error.HTTPError:
+    pass
 pygame.time.wait(1)
 
 # Colors
 BG_COLOR = (227, 227, 233)
-BTN_COLOR = (79, 85, 124)
-BTN_TXT_COLOR = (227, 227, 233)
-BTN_TXT_HOVERED_COLOR = (227, 119, 174)
+BTN_COLOR = '#0252b1'
+BTN_TXT_COLOR = '#ccdcef'
+BTN_TXT_HOVERED_COLOR = (227, 227, 233)
 TXT_COLOR = (40, 40, 41)
 DWNLDBAR_COLOR = (56, 98, 150)
 
 
 class App:
-
     def __init__(self):
         pygame.init()
         # display
         self.display = pygame.display.set_mode((480, 260))
         self.bg_color = BG_COLOR
         pygame.display.set_caption('EDOPRO HD Cards Downloader ' + version)
-        pygame.display.set_icon(pygame.image.load('hdcd_icon.png'))
+        self.set_icon()
         # events
         self.inputevents = []
         self.events = pygame.event.get()
@@ -41,18 +43,7 @@ class App:
 
         self.loop = True
 
-    def run(self):
-        while self.loop:
-            self.display.fill(self.bg_color)
-            self.cursor_by_context()
-            self.event_check()
-            self.group.update()
-            self.group.draw(self.display)
-            pygame.display.flip()
-            self.clock.tick(60)
-        pygame.quit()
-
-    def event_check(self):
+    def check_events(self):
         self.events = pygame.event.get()
         for event in self.events:
             if event.type == QUIT:
@@ -73,6 +64,20 @@ class App:
         for event in self.inputevents:
             event()
 
+    def get_center(self):
+        return self.display.get_width() / 2, self.display.get_height() / 2
+
+    @staticmethod
+    def set_icon():
+        try:
+            pygame.display.set_icon(pygame.image.load('hdcd_icon.png').convert_alpha())
+        except FileNotFoundError:
+            return
+
+    def clear_collision_boxes(self):
+        self.button_collision.empty()
+        self.inputbox_collision.empty()
+
     def cursor_by_context(self):
         if len(self.button_collision) > 0:
             cursor = SYSTEM_CURSOR_HAND
@@ -82,15 +87,19 @@ class App:
             cursor = SYSTEM_CURSOR_ARROW
         pygame.mouse.set_cursor(cursor)
 
-    def get_center(self):
-        return self.display.get_width() / 2, self.display.get_height() / 2
-
-    def clear_collision_boxes(self):
-        self.button_collision.empty()
-        self.inputbox_collision.empty()
-
     def leave_game(self):
         self.loop = False
+
+    def run(self):
+        while self.loop:
+            self.display.fill(self.bg_color)
+            self.cursor_by_context()
+            self.check_events()
+            self.group.update()
+            self.group.draw(self.display)
+            pygame.display.flip()
+            self.clock.tick(60)
+        pygame.quit()
 
 
 class LoadingBar(pygame.sprite.Sprite):
@@ -391,11 +400,9 @@ if __name__ == '__main__':
                 request.urlretrieve(database_url + deck[counter] + '.jpg',
                                     pics_folder + deck[counter] + pics_extension)
             except error.HTTPError or ConnectionResetError:
-                print(Exception)
+                pass
             download_bar.add_percent(1 / len(deck))
             counter += 1
-        else:
-            pass
 
 
     def complete_download():
