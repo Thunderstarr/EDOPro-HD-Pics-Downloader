@@ -11,7 +11,7 @@ The size of a standart card pic is 177x254 that downloads automaticaly when you 
 - Copy the file into your game folder;
 - Double-click exe or py file;
 ## Now with an Interface! 
-![interface img](https://i.ibb.co/Q8HP0PR/hdcdwnlder-print2.png)
+![interface img](https://i.ibb.co/4Z7nJBB/hd-cards-downloader.png)
 
 ## Features:
 - **Download all cards pics**. It may take a while since is over 9000 cards;
