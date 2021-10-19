@@ -4,14 +4,7 @@ from pygame.locals import *
 from urllib import request, error
 import webbrowser
 
-version = '2.1.3'
-
-# Resources
-try:
-    request.urlretrieve('https://i.ibb.co/ryjynsw/mini-icon.png', 'hdcd_icon.png')
-except error.HTTPError:
-    pass
-pygame.time.wait(1)
+version = '2.1.4'
 
 # Colors
 BG_COLOR = (227, 227, 233)
@@ -29,7 +22,7 @@ class App:
         self.display = pygame.display.set_mode((480, 260))
         self.bg_color = BG_COLOR
         pygame.display.set_caption('EDOPRO HD Cards Downloader ' + version)
-        self.set_icon()
+        pygame.display.set_icon(get_icon_surf())
         # events
         self.inputevents = []
         self.events = pygame.event.get()
@@ -66,13 +59,6 @@ class App:
 
     def get_center(self):
         return self.display.get_width() / 2, self.display.get_height() / 2
-
-    @staticmethod
-    def set_icon():
-        try:
-            pygame.display.set_icon(pygame.image.load('hdcd_icon.png').convert_alpha())
-        except FileNotFoundError:
-            return
 
     def clear_collision_boxes(self):
         self.button_collision.empty()
@@ -320,6 +306,14 @@ class InputBox(pygame.sprite.Sprite):
                 self.frame = 0
             self.frame += blink_speed
             return color
+
+
+def get_icon_surf():
+    surf = pygame.Surface((32, 32), SRCALPHA)
+    pygame.draw.rect(surf, '#a55127', [5, 0, 22, 32])
+    pygame.draw.rect(surf, '#e6cabe', [6, 20, 20, 11])
+    pygame.draw.rect(surf, '#000000', [6, 4, 20, 15])
+    return surf
 
 
 if __name__ == '__main__':
