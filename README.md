@@ -4,7 +4,7 @@ This program automamize the process of acess [YGO Cards Database](https://db.ygo
 
 ![card comparison](https://i.ibb.co/Y49skyJ/card-comparison.png)
 
-The size of a standart card pic is 177x254 that downloads automaticaly when you open the game, the pics you download with this program has the resolution of 421x614 or 139% larger and 142% taller. This upscale helps with runing your game in fullscreen.
+The size of a standart card pic is 177x254 that downloads automaticaly when you open the game, now the pics you download with this program has the resolution of 421x614 (139% larger and 142% taller). This upscale helps with runing the game in fullscreen.
 
 ## Instalation:
 - Download [exe](https://github.com/AlexsanderRST/edopro-hq-pics-downloader/blob/30799522aaee38cc0c15436482f4f876b8fc15f9/HQ%20Pics%20Downloader.exe) (~10 MB) or [py](https://github.com/AlexsanderRST/edopro-hq-pics-downloader/blob/30799522aaee38cc0c15436482f4f876b8fc15f9/HQ%20Pics%20Downloader.py) (~22 kb) (⚠️You must have [Python 3](https://www.python.org/) and [Pygame 2](https://pypi.org/project/pygame/) installed in your computer to run the .py file);
@@ -21,8 +21,8 @@ The size of a standart card pic is 177x254 that downloads automaticaly when you 
 ## Features:
 - **Download all cards pics**. It may take a while since is over 9000 cards;
 - **Download all fields artworks**;
-- **Download all new cards**. New cards added to *allcards.ydk* since the last update ;
-- **Download deck's cards pics**. Dev disappeared and new lowres cards still popping-up? You can put it all in a deck and use this feature.
+- **Download all new cards**. New cards added to *allcards.ydk* since the last update;
+- **Download deck's cards pics**. Downloads card pics from a deck name (Text Box).
 
 ## Extras:
 - The card names usually change from OCG to TCG. There is no function in the program specifically for new TCG cards, but the *New Cards.ydk* in the repository covers these releases.
