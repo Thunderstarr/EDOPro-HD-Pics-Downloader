@@ -1,4 +1,4 @@
-# [EDOPro/Ygopro](https://discord.gg/ygopro-percy) HD Pics Downloader
+# [EDOPro/Ygopro](https://discord.gg/ygopro-percy) HD Pics Downloader 2.1.4
 
 This program automamize the process of acess [YGO Cards Database](https://db.ygoprodeck.com/), choose of a card you want a better resolution pic, download the image and put it into your game's pics folder. The method is simple, a python script gets a list of cards ids in a ydk file and use link manipulation to download card per card directly into the pics folder.
 
@@ -9,9 +9,14 @@ The size of a standart card pic is 177x254 that downloads automaticaly when you 
 ## Instalation:
 - Download [exe](https://github.com/AlexsanderRST/edopro-hq-pics-downloader/blob/30799522aaee38cc0c15436482f4f876b8fc15f9/HQ%20Pics%20Downloader.exe) (~10 MB) or [py](https://github.com/AlexsanderRST/edopro-hq-pics-downloader/blob/30799522aaee38cc0c15436482f4f876b8fc15f9/HQ%20Pics%20Downloader.py) (~22 kb) (⚠️You must have [Python 3](https://www.python.org/) and [Pygame 2](https://pypi.org/project/pygame/) installed in your computer to run the .py file);
 - Copy the file into your game folder;
-- Double-click exe or py file;
+- Double-click exe or py file.
+
+## Update tips:
+- **The program does NOT update automatically**. The substitution of the your version to the newer may solve some crashes (If it still having crashes, open a Issue);
+- The ydks in this repo update automatically. You don't need to download them every time an update is launched.
+
 ## Now with an Interface! 
-![interface img](https://i.ibb.co/4Z7nJBB/hd-cards-downloader.png)
+![interface img](https://i.ibb.co/gvGvqhb/hdpd-214.png)
 
 ## Features:
 - **Download all cards pics**. It may take a while since is over 9000 cards;
@@ -24,12 +29,13 @@ The size of a standart card pic is 177x254 that downloads automaticaly when you 
 
 ## Compatibility:
 #### 👍:
+- Windows 10, 11;
 - All released TCG/OCG cards;
 - Some pre-released (beta) TCG/OCG cards;
-- Some Rush cards;
+- Some Rush cards.
 #### 👎:
 - Windows 7 or lower;
-- Anime/Unofficial/Custom cards;
+- Anime/Unofficial/Custom cards.
 
 ## You can help me:
 - Open a Issue if you have problems;
