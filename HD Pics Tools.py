@@ -59,6 +59,13 @@ def get_new_cards(pages=1):
     return new_cards
 
 
+def get_new_fields(pages=1):
+    new_fields, flags = [], '?&type=Spell Card&race=Field&sort=new&sortorder=desc&num=100'
+    for i in range(pages):
+        new_fields.extend(get_website_page_cards(flags=flags, offset=i * 100))
+    return new_fields
+
+
 def update_all_cards():
     all_cards = ydk_to_list('allcards')
     new_cards = []
@@ -70,5 +77,13 @@ def update_all_cards():
     list_to_ydk('allcards', all_cards)
 
 
+def update_all_fields():
+    all_fields = ydk_to_list('allfields')
+    for card_id in get_new_fields(2):
+        if card_id not in all_fields:
+            all_fields.append(card_id)
+    list_to_ydk('allfields', all_fields)
+
+
 if __name__ == '__main__':
-    update_all_cards()
+    pass
