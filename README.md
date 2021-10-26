@@ -1,18 +1,25 @@
 # [EDOPro/Ygopro](https://discord.gg/ygopro-percy) HD Pics Downloader 2.1.4
 
-This program automamize the process of acess [YGO Cards Database](https://db.ygoprodeck.com/), choose of a card you want a better resolution pic, download the image and put it into your game's pics folder. The method is simple, a python script gets a list of cards ids in a ydk file and use link manipulation to download card per card directly into the pics folder.
+This program automates the process of:
+- Access [YGO Cards Database](https://db.ygoprodeck.com/); 
+- Choose a card;
+- Scroll down to 'Download JPG image' option;
+- Download it into the game's pics folder.
+
+The method is simple, a python script gets a list of cards ids in a ydk file and use link manipulation to download card per card directly into the pics folder.
 
 ![card comparison](https://i.ibb.co/Y49skyJ/card-comparison.png)
 
-The size of a standart card pic is 177x254 that downloads automaticaly when you open the game, now the pics you download with this program has the resolution of 421x614 (139% larger and 142% taller). This upscale helps with runing the game in fullscreen.
+The size of game default card pic is 177x254 and the pics downloaded by this program is 421x614 (139% larger and 142% taller). 
 
 ## Instalation:
-- Download [exe](https://github.com/AlexsanderRST/edopro-hq-pics-downloader/blob/30799522aaee38cc0c15436482f4f876b8fc15f9/HQ%20Pics%20Downloader.exe) (~10 MB) or [py](https://github.com/AlexsanderRST/edopro-hq-pics-downloader/blob/30799522aaee38cc0c15436482f4f876b8fc15f9/HQ%20Pics%20Downloader.py) (~22 kb) (⚠️You must have [Python 3](https://www.python.org/) and [Pygame 2](https://pypi.org/project/pygame/) installed in your computer to run the .py file);
+- Download [exe](https://github.com/AlexsanderRST/edopro-hq-pics-downloader/blob/30799522aaee38cc0c15436482f4f876b8fc15f9/HQ%20Pics%20Downloader.exe) (~10 MB) 
+- **or** [py](https://github.com/AlexsanderRST/edopro-hq-pics-downloader/blob/30799522aaee38cc0c15436482f4f876b8fc15f9/HQ%20Pics%20Downloader.py) (~15 kb) (⚠️[Python 3](https://www.python.org/) and [Pygame 2](https://pypi.org/project/pygame/) required);
 - Copy the file into your game folder;
 - Double-click exe or py file.
 
 ## Update tips:
-- **The program does NOT update automatically**. The substitution of the your version to the newer may solve some crashes (If it still having crashes, open a Issue);
+- **The program does NOT update automatically**. The substitution of the your version to the newer may solve some crashes (If it still having crashes, open an Issue);
 - The ydks in this repo update automatically. You don't need to download them every time an update is launched.
 
 ## Now with an Interface! 
@@ -25,7 +32,7 @@ The size of a standart card pic is 177x254 that downloads automaticaly when you 
 - **Download deck's cards pics**. Downloads card pics from a deck name (Text Box).
 
 ## Extras:
-- The card names usually change from OCG to TCG. There is no function in the program specifically for new TCG cards, but the *New Cards.ydk* in the repository covers these releases.
+- The card names usually change from OCG to TCG. There is no function in the program specifically for new TCG cards, but the *New TCG.ydk* in the repository covers these releases.
 
 ## Compatibility:
 #### 👍:
@@ -38,5 +45,5 @@ The size of a standart card pic is 177x254 that downloads automaticaly when you 
 - Anime/Unofficial/Custom cards.
 
 ## You can help me:
-- Open a Issue if you have problems;
+- Open an Issue if you have problems;
 - Or donate: [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate?hosted_button_id=L53Z8HUNP7X66)
