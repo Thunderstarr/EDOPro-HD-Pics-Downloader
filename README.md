@@ -1,4 +1,4 @@
-# [EDOPro/Ygopro](https://discord.gg/ygopro-percy) HD Pics Downloader 2.1.4
+# [EDOPro/Ygopro](https://discord.gg/ygopro-percy) HD Pics Downloader 2.1.5
 
 This program automates the process of:
 - Access [YGO Cards Database](https://db.ygoprodeck.com/); 
@@ -14,16 +14,17 @@ The size of game default card pic is 177x254 and the pics downloaded by this pro
 
 ## Instalation:
 - Download [exe](https://github.com/AlexsanderRST/edopro-hq-pics-downloader/blob/30799522aaee38cc0c15436482f4f876b8fc15f9/HQ%20Pics%20Downloader.exe) (~10 MB) 
-- **or** [py](https://github.com/AlexsanderRST/edopro-hq-pics-downloader/blob/30799522aaee38cc0c15436482f4f876b8fc15f9/HQ%20Pics%20Downloader.py) (~15 kb) (⚠️[Python 3](https://www.python.org/) and [Pygame 2](https://pypi.org/project/pygame/) required);
+- **or** [py](https://github.com/AlexsanderRST/edopro-hq-pics-downloader/blob/30799522aaee38cc0c15436482f4f876b8fc15f9/HQ%20Pics%20Downloader.py) (~15 kb) (⚠️[Python 3.9+](https://www.python.org/) and [Pygame 2](https://pypi.org/project/pygame/) required);
 - Copy the file into your game folder;
 - Double-click exe or py file.
 
-## Update tips:
+## Tips:
 - **The program does NOT update automatically**. The substitution of the your version to the newer may solve some crashes (If it still having crashes, open an Issue);
-- The ydks in this repo update automatically. You don't need to download them every time an update is launched.
+- The ydks in this repo update automatically. You don't need to download them every time an update is launched;
+- When downloading all cards, apparently, the download goes faster if all cards pics were deleted before.
 
 ## Now with an Interface! 
-![interface img](https://i.ibb.co/gvGvqhb/hdpd-214.png)
+![interface img](https://i.ibb.co/fxtYnNg/hdd-print215.png)
 
 ## Features:
 - **Download all cards pics**. It may take a while since is over 9000 cards;
