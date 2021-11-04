@@ -1,10 +1,11 @@
 """Created by Alexsander Rosante 2021"""
+from math import sin
 import pygame
 from pygame.locals import *
 from urllib import request, error
 import webbrowser
 
-version = '2.1.4'
+version = '2.1.5'
 
 # Colors
 BG_COLOR = (227, 227, 233)
@@ -84,7 +85,6 @@ class App:
             self.group.update()
             self.group.draw(self.display)
             pygame.display.flip()
-            self.clock.tick(60)
         pygame.quit()
 
 
@@ -97,7 +97,7 @@ class LoadingBar(pygame.sprite.Sprite):
 
         super().__init__()
 
-        # General configs
+        # properties
         self.color = color
         self.bg_color = bg_color
         self.border_size = border_size
@@ -165,15 +165,15 @@ class LoadingBar(pygame.sprite.Sprite):
 class Button(pygame.sprite.Sprite):
     def __init__(self, text, command, width=150):
         super().__init__()
-        # General config
+        # properties
         self.width = width
         self.image = pygame.Surface((self.width, 40))
         self.rect = self.image.get_rect()
         self.border_radius = 0
         self.command = command
-        # Color
+        # color
         self.color = BTN_COLOR
-        # Text
+        # text
         self.text = text
         self.font = pygame.font.SysFont('Consolas', 21)
         self.text_color_idle = BTN_TXT_COLOR
@@ -197,9 +197,9 @@ class Button(pygame.sprite.Sprite):
             self.text_color = self.text_color_idle
             if self.border_radius > 0:
                 self.border_radius -= grow_vel
-        # Box
+        # box
         pygame.draw.rect(self.image, self.color, (0, 0, self.width, 40), 0, self.border_radius)
-        # Text
+        # text
         text = self.font.render(self.text, True, self.text_color)
         text_rect = text.get_rect(center=(self.width / 2, 20))
         self.image.blit(text, text_rect)
@@ -289,23 +289,20 @@ class InputBox(pygame.sprite.Sprite):
     class Caret:
         def __init__(self, font):
             self.font = font
-            self.frame = 0
 
         def draw(self, text, text_rect, box):
-            image = self.font.render('|', True, self.color())
+            image = self.font.render('|', True, 'black')
+            image.set_alpha(self.get_wave_alpha())
             rect = image.get_rect(topleft=(0, 5))
             if text:
                 rect.left = text_rect.right - 5
             box.blit(image, rect)
 
-        def color(self, blink_speed=1):
-            color = Color('black')
-            if 30 < self.frame <= 60:
-                color = Color('white')
-            elif self.frame > 60:
-                self.frame = 0
-            self.frame += blink_speed
-            return color
+        @staticmethod
+        def get_wave_alpha():
+            if sin(pygame.time.get_ticks() * 0.01) > 0:
+                return 255
+            return 0
 
 
 def get_icon_surf():
@@ -393,8 +390,16 @@ if __name__ == '__main__':
             try:
                 request.urlretrieve(database_url + deck[counter] + '.jpg',
                                     pics_folder + deck[counter] + pics_extension)
-            except error.HTTPError or ConnectionResetError:
-                pass
+            except error.HTTPError:
+                print(f'Pass at {deck[counter]} due urllib.error.HTTPError')
+            except error.URLError:
+                print(f'Pass at {deck[counter]} due urllib.error.URLError')
+            except ConnectionResetError:
+                print(f'Pass at {deck[counter]} due ConnectionResetError')
+            except FileNotFoundError:
+                print(f'Pass at {deck[counter]} due FileNotFound')
+            except OSError:
+                print(f'Pass at {deck[counter]} due OsError')
             download_bar.add_percent(1 / len(deck))
             counter += 1
 
