@@ -19,7 +19,7 @@ The size of game default card pic is 177x254 and the pics downloaded by this pro
 - Double-click exe or py file.
 
 ## Tips:
-- **The program does NOT update automatically**. The substitution of the your version to the newer may solve some crashes (If it still having crashes, open an Issue);
+- **The program does NOT update automatically**. Update it may solve some issues;
 - The ydks in this repo update automatically. You don't need to download them every time an update is launched;
 - When downloading all cards, apparently, the download goes faster if all cards pics were deleted before.
 
@@ -31,9 +31,6 @@ The size of game default card pic is 177x254 and the pics downloaded by this pro
 - **Download all fields artworks**;
 - **Download all new cards**. New cards added to *allcards.ydk* since the last update;
 - **Download deck's cards pics**. Downloads card pics from a deck name (Text Box).
-
-## Extras:
-- The card names usually change from OCG to TCG. There is no function in the program specifically for new TCG cards, but the *New TCG.ydk* in the repository covers these releases.
 
 ## Compatibility:
 #### 👍:
