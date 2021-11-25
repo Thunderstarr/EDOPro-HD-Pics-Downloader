@@ -1,4 +1,4 @@
-# [EDOPro/Ygopro](https://discord.gg/ygopro-percy) HD Pics Downloader 2.1.5
+# [EDOPro/Ygopro](https://discord.gg/ygopro-percy) HD Pics Downloader 2.2.0
 
 This program automates the process of:
 - Access [YGO Cards Database](https://db.ygoprodeck.com/); 
