@@ -13,8 +13,8 @@ The method is simple, a python script gets a list of cards ids in a ydk file and
 The size of game default card pic is 177x254 and the pics downloaded by this program is 421x614 (139% larger and 142% taller). 
 
 ## Instalation:
-- Download [exe](https://github.com/AlexsanderRST/edopro-hq-pics-downloader/blob/30799522aaee38cc0c15436482f4f876b8fc15f9/HQ%20Pics%20Downloader.exe) (~10 MB) 
-- **or** [py](https://github.com/AlexsanderRST/edopro-hq-pics-downloader/blob/30799522aaee38cc0c15436482f4f876b8fc15f9/HQ%20Pics%20Downloader.py) (~15 kb) (⚠️[Python 3.9+](https://www.python.org/) and [Pygame 2](https://pypi.org/project/pygame/) required);
+- Download [exe](https://github.com/AlexsanderRST/edopro-hq-pics-downloader/blob/30799522aaee38cc0c15436482f4f876b8fc15f9/HQ%20Pics%20Downloader.exe) (~9 MB) 
+- **or** [py](https://github.com/AlexsanderRST/edopro-hq-pics-downloader/blob/30799522aaee38cc0c15436482f4f876b8fc15f9/HQ%20Pics%20Downloader.py) (~19 kb) (⚠️[Python 3.9+](https://www.python.org/) and [Pygame 2](https://pypi.org/project/pygame/) required);
 - Copy the file into your game folder;
 - Double-click exe or py file.
 
@@ -24,7 +24,7 @@ The size of game default card pic is 177x254 and the pics downloaded by this pro
 - When downloading all cards, apparently, the download goes faster if all cards pics were deleted before.
 
 ## Now with an Interface! 
-![interface img](https://i.ibb.co/fxtYnNg/hdd-print215.png)
+![interface img](https://i.ibb.co/cYKBSSs/hdcd-220.png)
 
 ## Features:
 - **Download all cards pics**. It may take a while since is over 9000 cards;
