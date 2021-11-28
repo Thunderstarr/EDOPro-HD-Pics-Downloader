@@ -1,36 +1,27 @@
-"""Created by Alexsander Rosante 2021"""
-import time
+"""
+Created by Alexsander Rosante 2021
+Github: https://github.com/AlexsanderRST
+"""
 
+from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
-from bs4 import BeautifulSoup
+
+import time
 
 
-def ydk_to_list(deck_name):
-    """Converts .ydk file into a list"""
-    dk, aux = [], []
-    code_blacklist = '#main', '!side', '#extra'
-    try:
-        dk = open('deck/' + deck_name + '.ydk').readlines()
-    except FileNotFoundError:
-        return False
-    for card in dk:
-        code = card[:-1]
-        if code not in code_blacklist:
-            aux.append(code)
-    dk = aux[1:]
-    return dk
+def get_new_cards(pages=1):
+    new_cards = []
+    for i in range(pages):
+        new_cards.extend(get_website_page_cards(flags='&sort=new&sortorder=desc&num=100', offset=i * 100))
+    return new_cards
 
 
-def list_to_ydk(deck_name, card_list):
-    """Converts list into a .ydk file"""
-    with open(f'deck/{deck_name}.ydk', 'w') as fp:
-        fp.write('#created by AlexsanderRosante\n')
-        fp.write('#main\n')
-        for card_id in card_list:
-            fp.write(f'{card_id}\n')
-        fp.write('!side\n')
-        fp.write('#extra\n')
+def get_new_fields(pages=1):
+    new_fields, flags = [], '?&type=Spell Card&race=Field&sort=new&sortorder=desc&num=100'
+    for i in range(pages):
+        new_fields.extend(get_website_page_cards(flags=flags, offset=i * 100))
+    return new_fields
 
 
 def get_website_page_cards(flags, offset=0):
@@ -52,18 +43,15 @@ def get_website_page_cards(flags, offset=0):
     return card_list
 
 
-def get_new_cards(pages=1):
-    new_cards = []
-    for i in range(pages):
-        new_cards.extend(get_website_page_cards(flags='&sort=new&sortorder=desc&num=100', offset=i * 100))
-    return new_cards
-
-
-def get_new_fields(pages=1):
-    new_fields, flags = [], '?&type=Spell Card&race=Field&sort=new&sortorder=desc&num=100'
-    for i in range(pages):
-        new_fields.extend(get_website_page_cards(flags=flags, offset=i * 100))
-    return new_fields
+def list_to_ydk(deck_name, card_list):
+    """Converts list into a .ydk file"""
+    with open(f'deck/{deck_name}.ydk', 'w') as fp:
+        fp.write('#created by AlexsanderRosante\n')
+        fp.write('#main\n')
+        for card_id in card_list:
+            fp.write(f'{card_id}\n')
+        fp.write('!side\n')
+        fp.write('#extra\n')
 
 
 def update_all_cards():
@@ -85,5 +73,22 @@ def update_all_fields():
     list_to_ydk('allfields', all_fields)
 
 
+def ydk_to_list(deck_name):
+    """Converts .ydk file into a list"""
+    dk, aux = [], []
+    code_blacklist = '#main', '!side', '#extra'
+    try:
+        dk = open('deck/' + deck_name + '.ydk').readlines()
+    except FileNotFoundError:
+        return False
+    for card in dk:
+        code = card[:-1]
+        if code not in code_blacklist:
+            aux.append(code)
+    dk = aux[1:]
+    return dk
+
+
 if __name__ == '__main__':
-    pass
+    update_all_cards()
+    update_all_fields()
