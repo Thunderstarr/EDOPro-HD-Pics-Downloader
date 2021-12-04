@@ -1,4 +1,5 @@
-"""Created by Alexsander Rosante 2021
+"""
+Created by Alexsander Rosante 2021
 Github: https://github.com/AlexsanderRST
 """
 
@@ -9,7 +10,7 @@ from pygame.locals import *
 import pygame
 import webbrowser
 
-version = '2.2.0'
+version = '2.2.1'
 
 pygame.init()
 pygame.font.init()
@@ -58,7 +59,9 @@ class App:
         for event in self.events:
             if event.type == QUIT:
                 self.leave_game()
-            if event.type == KEYDOWN:
+            elif event.type == MOUSEBUTTONDOWN:
+                inputbox.active = inputbox.rect.collidepoint(event.pos)
+            elif event.type == KEYDOWN:
                 if inputbox.active:
                     if event.key == K_ESCAPE:
                         inputbox.text = ''
@@ -71,12 +74,7 @@ class App:
             elif event.type == KEYUP:
                 if inputbox.active and event.key == K_BACKSPACE:
                     self.bksp_down = False
-            if event.type == MOUSEBUTTONDOWN:
-                if inputbox.rect.collidepoint(event.pos):
-                    inputbox.active = True
-                else:
-                    inputbox.active = False
-            if event.type == BKSP_DOWN and self.bksp_down and inputbox.active:
+            elif event.type == BKSP_DOWN and self.bksp_down and inputbox.active:
                 inputbox.text = ''
         for event in self.inputevents:
             event()
@@ -89,12 +87,11 @@ class App:
         self.inputbox_collision.empty()
 
     def cursor_by_context(self):
+        cursor = SYSTEM_CURSOR_ARROW
         if len(self.button_collision) > 0:
             cursor = SYSTEM_CURSOR_HAND
         elif len(self.inputbox_collision) > 0:
             cursor = SYSTEM_CURSOR_IBEAM
-        else:
-            cursor = SYSTEM_CURSOR_ARROW
         pygame.mouse.set_cursor(cursor)
 
     def leave_game(self):
@@ -120,7 +117,7 @@ class Button(pygame.sprite.Sprite):
     def __init__(
             self,
             text,
-            command,
+            on_click=lambda: None,
             width=150,
             color=colorButton,
             color_hovered=colorButtonHovered,
@@ -133,7 +130,7 @@ class Button(pygame.sprite.Sprite):
         self.image = pygame.Surface((self.width, 40))
         self.rect = self.image.get_rect()
         self.border_radius = border_radius
-        self.command = command
+        self.on_click = on_click
         # color
         self.color = color
         self.color_hovered = color_hovered
@@ -148,17 +145,17 @@ class Button(pygame.sprite.Sprite):
 
     def check_input(self):
         self.cur_color = self.color
-        if self.rect.collidepoint(pygame.mouse.get_pos()):
-            for event in app.events:
-                if event.type == MOUSEBUTTONDOWN and event.button == 1:
-                    self.command()
-                    return
-            app.button_collision.add(self)
-            self.cur_color = self.color_hovered
-            self.text_color = self.text_color_hovered
-        else:
+        if not self.rect.collidepoint(pygame.mouse.get_pos()):
             app.button_collision.remove(self)
             self.text_color = self.text_color_idle
+        else:
+            for event in app.events:
+                if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    self.on_click()
+                    return
+            app.button_collision.add(self)
+            self.text_color = self.text_color_hovered
+            self.cur_color = self.color_hovered
 
     def draw_button(self):
         self.image.fill(app.bg_color)
@@ -264,7 +261,7 @@ class LoadingBar(pygame.sprite.Sprite):
                  text_pos='',
                  border_size=0,
                  grow_vel=0,
-                 end_command=lambda: None,
+                 on_end=lambda: None,
                  max_items=1):
 
         super().__init__()
@@ -300,7 +297,7 @@ class LoadingBar(pygame.sprite.Sprite):
         self.text_prefix = text_prefix
         self.text_suffix = text_suffix
 
-        self.end_command = end_command
+        self.on_end = on_end
 
     def update(self):
         self.image.fill(self.bg_color)
@@ -309,7 +306,7 @@ class LoadingBar(pygame.sprite.Sprite):
             self.width += self.grow_vel
         else:
             self.width = self.max_width
-            self.end_command()
+            self.on_end()
         pygame.draw.rect(self.image, self.color, (self.border_size,
                                                   self.border_size,
                                                   self.width,
@@ -378,15 +375,18 @@ def call_input_ui():
     app.clear_collision_boxes()
 
 
-def check_version(text_size=20):
+def check_version(text_size=17):
     try:
         cur_version = request.urlopen(
             'https://raw.githubusercontent.com/AlexsanderRST/EDOPro-HD-Pics-Downloader/main/version.txt',
         ).read(10).decode()[:-1]
         if version == cur_version:
+            log.append('Version checked: updated \n')
             return Text(f'{version}', size=text_size, color='green')
+        log.append(f'Version checked: outdated. Update to {cur_version} \n')
         return Text(f'{version} (outdated)', size=text_size, color='red')
-    except error.URLError:
+    except exceptions as e:
+        log.append(f'Version not checked due {e}\n')
         return Text(f'offline', size=text_size, color='red')
 
 
@@ -394,70 +394,88 @@ def download(database_url, pics_folder, pics_extension):
     """Receives a deck list to download cards pics from database"""
     global counter
     download_bar.max_items = len(deck)
-    if counter < len(deck):
+    if counter < len(deck) and not download_paused:
         card_id = deck[counter]
         try:
             request.urlretrieve(database_url + deck[counter] + '.jpg',
                                 pics_folder + deck[counter] + pics_extension)
-            log.append(f'{card_id} downloaded!\n')
-        except error.HTTPError:
-            log.append(f'Pass at {card_id} due urllib.error.HTTPError\n')
-        except error.URLError:
-            log.append(f'Pass at {card_id} due urllib.error.URLError\n')
-        except ConnectionResetError:
-            log.append(f'Pass at {card_id} due ConnectionResetError\n')
-        except FileNotFoundError:
-            log.append(f'Pass at {card_id} due FileNotFound\n')
-        except OSError:
-            log.append(f'Pass at {card_id} due OsError\n')
+            log.append(f'{card_id} downloaded [{counter + 1}/{len(deck)}]\n')
+        except exceptions as e:
+            log.append(f'Pass at {card_id} due {e}\n')
         download_bar.add_percent(1 / len(deck))
         counter += 1
 
 
-def download_setup(mode=''):
+def download_setup(deck_name=''):
     global deck
-    if mode in ('newcards', 'allcards', 'allfields'):
-        ydk_url = 'https://raw.githubusercontent.com/AlexsanderRST/edopro-hd-cards-downloader/main/'
-        if mode == 'newcards':
-            ydk_url += 'newcards.ydk'
-        elif mode == 'allcards':
-            ydk_url += 'allcards.ydk'
-        else:
-            ydk_url += 'allfields.ydk'
-        try:
-            request.urlretrieve(ydk_url, 'deck/' + mode + '.ydk')
-        except error.URLError:
-            print('No connection available')
-            return
-        deck_name = mode
-    else:
+    log.append('Download setup initialized...\n')
+
+    # set deck
+    if deck_name not in ('newcards', 'allcards', 'allfields'):
         deck_name = inputbox.text
-    deck = ydk_to_list(deck_name)
-    if deck:
-        inputbox.text = ''
-        if mode == 'allfields':
-            dwnld_info = {'database_url': 'https://storage.googleapis.com/ygoprodeck.com/pics_artgame/',
-                          'pics_folder': 'pics/field/',
-                          'pics_extension': '.png'}
-        else:
-            dwnld_info = {'database_url': 'https://storage.googleapis.com/ygoprodeck.com/pics/',
-                          'pics_folder': 'pics/',
-                          'pics_extension': '.jpg'}
-        app.inputevents.append(lambda: download(**dwnld_info))
-        call_download_ui()
     else:
+        url = 'https://raw.githubusercontent.com/AlexsanderRST/edopro-hd-cards-downloader/main/'
+        url += f'{deck_name}.ydk'
+        try:
+            request.urlretrieve(url, f'deck/{deck_name}.ydk')
+            log.append(f'{deck_name}.ydk downloaded from repository \n')
+        except exceptions as e:
+            log.append(f'{deck_name}.ydk not downloaded: {e}\n')
+            return
+    deck = ydk_to_list(deck_name)
+
+    # set download
+    if not deck:
         app.group.add(WarningText())
+        log.append(f'{deck_name}.ydk not found \n')
+    else:
+        if deck_name == 'allfields':
+            info = {'database_url': 'https://storage.googleapis.com/ygoprodeck.com/pics_artgame/',
+                    'pics_folder': 'pics/field/',
+                    'pics_extension': '.png'}
+        else:
+            info = {'database_url': 'https://storage.googleapis.com/ygoprodeck.com/pics/',
+                    'pics_folder': 'pics/',
+                    'pics_extension': '.jpg'}
+        app.inputevents.append(lambda: download(**info))
+        call_download_ui()
+        inputbox.text = ''
+        log.append(f'Download setup done. Downloading {deck_name}.ydk...\n')
 
 
-def download_complete():
+def download_complete(canceled=False):
     global deck, counter
-    # change ui elements
-    app.group.remove(*uiDownload[:-2])
-    app.group.add(textDownloadDone, buttonContinue)
     # resets
     app.inputevents = app.inputevents[:-1]
     deck, counter = [], 0
     download_bar.width = .1
+    # checks the reason of download completing
+    if not canceled:
+        app.group.remove(*uiDownload[:-2])
+        app.group.add(textDownloadDone, buttonContinue)
+        log.append('Download completed \n')
+    else:
+        download_unpause()
+        call_input_ui()
+        log.append('Download canceled \n')
+
+
+def download_pause():
+    global download_paused
+    app.group.remove(buttonDnldPause)
+    app.group.add(buttonDlndContinue)
+    app.clear_collision_boxes()
+    download_paused = True
+    log.append('Download paused \n')
+
+
+def download_unpause():
+    global download_paused
+    app.group.remove(buttonDlndContinue)
+    app.group.add(buttonDnldPause)
+    app.clear_collision_boxes()
+    download_paused = False
+    log.append('Download unpaused \n')
 
 
 def get_icon_surf(size=26):
@@ -485,9 +503,16 @@ def inputbox_filled():
             app.group.add(buttonAllCards, buttonAllFields, buttonNewCards)
 
 
+def open_repo_url():
+    webbrowser.open('https://github.com/AlexsanderRST/EDOPro-HD-Pics-Downloader')
+
+
 def write_log():
-    with open('HD Pics Downloader log.txt', 'w') as fp:
-        fp.write(''.join(log))
+    try:
+        with open('HD Pics Downloader log.txt', 'w') as fp:
+            fp.write(''.join(log))
+    except PermissionError:
+        return
 
 
 def ydk_to_list(deck_name):
@@ -516,31 +541,35 @@ if __name__ == '__main__':
     deck = []
     counter = 0
     download_mode = 0
+    download_paused = False
     spacing = 6
     btn_exit_h = 40
-    repo_url = 'https://github.com/AlexsanderRST/EDOPro-HD-Pics-Downloader'
     log = []
+    exceptions = (error.URLError, error.HTTPError, ConnectionResetError, FileNotFoundError, OSError)
 
     # Input Box
     inputbox = InputBox()
 
     # Buttons
-    buttonGit = Button('Git', lambda: webbrowser.open(repo_url), width=75)
     buttonAllCards = Button('All cards', lambda: download_setup('allcards'))
     buttonAllFields = Button('All fields', lambda: download_setup('allfields'))
-    buttonNewCards = Button('New cards', lambda: download_setup('newcards'))
-    buttonDownload = Button('Download', download_setup)
     buttonContinue = Button('Continue', call_input_ui)
+    buttonGit = Button('Git', open_repo_url, width=75)
+    buttonDownload = Button('Download', download_setup)
     buttonExit = Button('X', app.quit, 40, colorBackground, '#e50000', '#414141', border_radius=0)
+    buttonNewCards = Button('New cards', lambda: download_setup('newcards'))
+    buttonDnldPause = Button('Pause', on_click=download_pause)
+    buttonDlndContinue = Button('Continue', on_click=download_unpause)
+    buttonDlndCancel = Button('Cancel', on_click=lambda: download_complete(canceled=True))
 
     # Texts
     textYdk = Text('.ydk', size=26, color='darkgray')
-    textDownloadDone = Text('Download completed!', size=26, color='darkgray')
-    textName = Text('EDOPRO HD Cards Downloader', size=20, color='darkgray')
+    textDownloadDone = Text('Download completed!', size=26, color='green')
+    textName = Text('EDOPro HD Pics Downloader', size=20, color='#595959')
     textVersion = check_version()
 
     # Bar
-    download_bar = LoadingBar(460, 60, (56, 98, 150), border_size=3, text_method='item', end_command=download_complete)
+    download_bar = LoadingBar(460, 60, (56, 98, 150), border_size=3, text_method='item', on_end=download_complete)
 
     # others
     icon_sprite = pygame.sprite.Sprite()
@@ -561,12 +590,20 @@ if __name__ == '__main__':
     textVersion.rect.bottomleft = spacing, display_h - spacing
     icon_sprite.rect = icon_sprite.image.get_rect(midleft=(spacing, buttonExit.rect.centery))
     textName.rect.midleft = icon_sprite.rect.right + spacing, buttonExit.rect.centery
+    buttonDnldPause.rect.topright = download_bar.rect.centerx - spacing, download_bar.rect.bottom + spacing
+    buttonDlndCancel.rect.midleft = download_bar.rect.centerx + spacing, buttonDnldPause.rect.centery
+    buttonDlndContinue.rect.center = buttonDnldPause.rect.center
 
     # Lists
     uiInput = [inputbox, textYdk, buttonAllCards, buttonAllFields, buttonNewCards, buttonGit, buttonDownload]
-    uiDownload = [download_bar, textDownloadDone, buttonContinue]
+    uiDownload = [download_bar, buttonDnldPause, buttonDlndCancel, textDownloadDone, buttonContinue]
     uiFixed = [buttonExit, textName, textVersion, icon_sprite]
     app.group.add(*uiFixed, *uiInput[:-1])
 
+    pygame.time.wait(100)
+
     app.run()
+
+    # write log
+    log.append('Program exited \n')
     write_log()
