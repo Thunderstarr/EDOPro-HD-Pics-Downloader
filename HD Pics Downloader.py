@@ -8,9 +8,10 @@ from urllib import request, error
 from pygame.locals import *
 
 import pygame
+import threading
 import webbrowser
 
-version = '2.2.1'
+version = '2.2.2'
 
 pygame.init()
 pygame.font.init()
@@ -102,6 +103,7 @@ class App:
 
     def run(self):
         while self.loop:
+            # self.clock.tick(30)
             self.display.fill(self.bg_color)
             self.cursor_by_context()
             self.check_events()
@@ -390,24 +392,31 @@ def check_version(text_size=17):
         return Text(f'offline', size=text_size, color='red')
 
 
-def download(database_url, pics_folder, pics_extension):
-    """Receives a deck list to download cards pics from database"""
+def download():
+    if threading.active_count() == 1 and not download_paused:
+        download_complete()
+
+
+def download_threaded(c, accr, deck_len):
+    """Downloads a card pics and spawn a new thread"""
     global counter
-    download_bar.max_items = len(deck)
-    if counter < len(deck) and not download_paused:
-        card_id = deck[counter]
+    if c < len(deck):
+        card_id = deck[c]
         try:
-            request.urlretrieve(database_url + deck[counter] + '.jpg',
-                                pics_folder + deck[counter] + pics_extension)
-            log.append(f'{card_id} downloaded [{counter + 1}/{len(deck)}]\n')
+            request.urlretrieve(f'{db_url}{card_id}.jpg', f'{pics_dir}{card_id}{pics_ext}')
+            log.append(f'{card_id} downloaded [{c + 1}/{len(deck)}]\n')
         except exceptions as e:
             log.append(f'Pass at {card_id} due {e}\n')
-        download_bar.add_percent(1 / len(deck))
+        download_bar.add_percent(1 / deck_len)
         counter += 1
+        if c + accr < len(deck) and not download_paused:
+            thread_args = (c + accr, accr, deck_len)
+            thread = threading.Thread(target=download_threaded, args=thread_args)
+            thread.start()
 
 
 def download_setup(deck_name=''):
-    global deck
+    global deck, db_url, pics_dir, pics_ext
     log.append('Download setup initialized...\n')
 
     # set deck
@@ -428,18 +437,27 @@ def download_setup(deck_name=''):
     if not deck:
         app.group.add(WarningText())
         log.append(f'{deck_name}.ydk not found \n')
+
     else:
         if deck_name == 'allfields':
-            info = {'database_url': 'https://storage.googleapis.com/ygoprodeck.com/pics_artgame/',
-                    'pics_folder': 'pics/field/',
-                    'pics_extension': '.png'}
+            db_url = 'https://storage.googleapis.com/ygoprodeck.com/pics_artgame/'
+            pics_dir = 'pics/field/'
+            pics_ext = '.png'
         else:
-            info = {'database_url': 'https://storage.googleapis.com/ygoprodeck.com/pics/',
-                    'pics_folder': 'pics/',
-                    'pics_extension': '.jpg'}
-        app.inputevents.append(lambda: download(**info))
+            db_url = 'https://storage.googleapis.com/ygoprodeck.com/pics/'
+            pics_dir = 'pics/'
+            pics_ext = '.jpg'
+        app.inputevents.append(download)
         call_download_ui()
         inputbox.text = ''
+        download_bar.max_items = len(deck)
+
+        # threads setup
+        for i in range(threads):
+            thread_args = (counter + i, threads, len(deck))
+            thread = threading.Thread(target=download_threaded, args=thread_args)
+            thread.start()
+
         log.append(f'Download setup done. Downloading {deck_name}.ydk...\n')
 
 
@@ -471,9 +489,15 @@ def download_pause():
 
 def download_unpause():
     global download_paused
+    # ui changes
     app.group.remove(buttonDlndContinue)
     app.group.add(buttonDnldPause)
     app.clear_collision_boxes()
+    # restart download
+    for i in range(threads):
+        thread_args = ((counter - threads) + i, threads, len(deck))
+        thread = threading.Thread(target=download_threaded, args=thread_args)
+        thread.start()
     download_paused = False
     log.append('Download unpaused \n')
 
@@ -537,15 +561,27 @@ if __name__ == '__main__':
     display_w, display_h = 480, 305
     app = App()
 
-    # Parameters
-    deck = []
+    # positioning
+    btn_exit_h = 40
+    spacing = 6
+
+    # errors
+    exceptions = (error.URLError, error.HTTPError, ConnectionResetError, FileNotFoundError, OSError)
+
+    # download states
     counter = 0
+    deck = []
     download_mode = 0
     download_paused = False
-    spacing = 6
-    btn_exit_h = 40
+    db_url = ''
+    pics_dir = ''
+    pics_ext = ''
+
+    # log
     log = []
-    exceptions = (error.URLError, error.HTTPError, ConnectionResetError, FileNotFoundError, OSError)
+
+    # threads (NOT CPU ones) - the more the faster, but heavy memory cost
+    threads = 20
 
     # Input Box
     inputbox = InputBox()
@@ -569,7 +605,7 @@ if __name__ == '__main__':
     textVersion = check_version()
 
     # Bar
-    download_bar = LoadingBar(460, 60, (56, 98, 150), border_size=3, text_method='item', on_end=download_complete)
+    download_bar = LoadingBar(460, 60, (56, 98, 150), border_size=3, text_method='item')
 
     # others
     icon_sprite = pygame.sprite.Sprite()
