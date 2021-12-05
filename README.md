@@ -1,4 +1,4 @@
-# [EDOPro/Ygopro](https://discord.gg/ygopro-percy) HD Pics Downloader 2.2.2
+# [EDOPro/Ygopro](https://discord.gg/ygopro-percy) HD Pics Downloader v2.2.2
 
 This program automates the process of:
 - Access [YGO Cards Database](https://db.ygoprodeck.com/); 
@@ -24,7 +24,7 @@ The size of game default card pic is 177x254 and the pics downloaded by this pro
 - When downloading all cards, apparently, the download goes faster if all cards pics were deleted before.
 
 ## Now with an Interface! 
-![interface img](https://i.ibb.co/VWHQkmV/hdpc222.png)
+![interface img](https://i.ibb.co/QF8W96v/hdcd222-2.png)
 
 ## Features:
 - **Download all cards pics**. It may take a while since is over 9000 cards;
