@@ -6,12 +6,12 @@ Github: https://github.com/AlexsanderRST
 from math import sin
 from urllib import request, error
 from pygame.locals import *
+from webbrowser import open as open_url
 
 import pygame
 import threading
-import webbrowser
 
-version = '2.2.2'
+version = '2.3.0'
 
 pygame.init()
 pygame.font.init()
@@ -528,7 +528,7 @@ def inputbox_filled():
 
 
 def open_repo_url():
-    webbrowser.open('https://github.com/AlexsanderRST/EDOPro-HD-Pics-Downloader')
+    open_url('https://github.com/AlexsanderRST/EDOPro-HD-Pics-Downloader')
 
 
 def write_log():
@@ -592,7 +592,8 @@ if __name__ == '__main__':
     buttonContinue = Button('Continue', call_input_ui)
     buttonGit = Button('Git', open_repo_url, width=75)
     buttonDownload = Button('Download', download_setup)
-    buttonExit = Button('X', app.quit, 40, colorBackground, '#e50000', '#414141', border_radius=0)
+    buttonMinimize = Button('_', pygame.display.iconify, 37, colorBackground, '#595959', '#414141', border_radius=0)
+    buttonExit = Button('X', app.quit, 37, colorBackground, '#e50000', '#414141', border_radius=0)
     buttonNewCards = Button('New cards', lambda: download_setup('newcards'))
     buttonDnldPause = Button('Pause', on_click=download_pause)
     buttonDlndContinue = Button('Continue', on_click=download_unpause)
@@ -623,6 +624,7 @@ if __name__ == '__main__':
     textDownloadDone.rect.midbottom = display_w / 2, display_h / 2 - spacing
     buttonContinue.rect.midtop = display_w / 2, display_h / 2 + spacing
     buttonExit.rect.topright = display_w, 0
+    buttonMinimize.rect.midright = buttonExit.rect.midleft
     textVersion.rect.bottomleft = spacing, display_h - spacing
     icon_sprite.rect = icon_sprite.image.get_rect(midleft=(spacing, buttonExit.rect.centery))
     textName.rect.midleft = icon_sprite.rect.right + spacing, buttonExit.rect.centery
@@ -633,7 +635,7 @@ if __name__ == '__main__':
     # Lists
     uiInput = [inputbox, textYdk, buttonAllCards, buttonAllFields, buttonNewCards, buttonGit, buttonDownload]
     uiDownload = [download_bar, buttonDnldPause, buttonDlndCancel, textDownloadDone, buttonContinue]
-    uiFixed = [buttonExit, textName, textVersion, icon_sprite]
+    uiFixed = [buttonMinimize, buttonExit, textName, textVersion, icon_sprite]
     app.group.add(*uiFixed, *uiInput[:-1])
 
     pygame.time.wait(100)

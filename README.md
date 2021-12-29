@@ -1,4 +1,4 @@
-# [EDOPro/Ygopro](https://discord.gg/ygopro-percy) HD Pics Downloader v2.2.2
+# [EDOPro/Ygopro](https://discord.gg/ygopro-percy) HD Pics Downloader v2.3.0
 
 This program automates the process of:
 - Access [YGO Cards Database](https://db.ygoprodeck.com/); 
@@ -14,7 +14,7 @@ The size of game default card pic is 177x254 and the pics downloaded by this pro
 
 ## Instalation:
 - Download [exe](https://github.com/AlexsanderRST/edopro-hq-pics-downloader/blob/30799522aaee38cc0c15436482f4f876b8fc15f9/HQ%20Pics%20Downloader.exe) (~9 MB) 
-- **or** [py](https://github.com/AlexsanderRST/edopro-hq-pics-downloader/blob/30799522aaee38cc0c15436482f4f876b8fc15f9/HQ%20Pics%20Downloader.py) (~21 kb) (⚠️[Python 3.9+](https://www.python.org/) and [Pygame 2](https://pypi.org/project/pygame/) required);
+- **or** [py](https://github.com/AlexsanderRST/edopro-hq-pics-downloader/blob/30799522aaee38cc0c15436482f4f876b8fc15f9/HQ%20Pics%20Downloader.py) (~21 kb) (⚠️[Python 3.10+](https://www.python.org/) and [Pygame 2.0+](https://pypi.org/project/pygame/) required);
 - Copy the file into your game folder;
 - Double-click exe or py file.
 
@@ -24,7 +24,7 @@ The size of game default card pic is 177x254 and the pics downloaded by this pro
 - When downloading all cards, apparently, the download goes faster if all cards pics were deleted before.
 
 ## Now with an Interface! 
-![interface img](https://i.ibb.co/QF8W96v/hdcd222-2.png)
+![interface img](https://i.ibb.co/qNZ2qPF/hdcd230-1.png)
 
 ## Features:
 - **Download all cards pics**. It may take a while since is over 9000 cards;
