@@ -24,7 +24,7 @@ The size of game default card pic is 177x254 and the pics downloaded by this pro
 - When downloading all cards, apparently, the download goes faster if all cards pics were deleted before.
 
 ## Now with an Interface! 
-![interface img](https://i.ibb.co/qNZ2qPF/hdcd230-1.png)
+![interface img](https://i.ibb.co/W6qY0mk/hdcd230-2.png)
 
 ## Features:
 - **Download all cards pics**. It may take a while since is over 9000 cards;
