@@ -1,4 +1,9 @@
-# [EDOPro/Ygopro](https://discord.gg/ygopro-percy) HD Pics Downloader v2.3.0
+# [EDOPro/YGOPro](https://discord.gg/ygopro-percy) HD Pics Downloader
+
+![Program version](https://img.shields.io/badge/Version-2.3.0-blueviolet?style=flat-square)
+![Python version](https://img.shields.io/badge/Python-3.10-blue?style=flat-square)
+![Pygame version](https://img.shields.io/badge/Pygame-2.1-green?style=flat-square)
+[![Donate](https://img.shields.io/badge/Donate-Paypal-blue?style=flat-square)](https://www.paypal.com/donate?hosted_button_id=L53Z8HUNP7X66)
 
 This program automates the process of:
 - Access [YGO Cards Database](https://db.ygoprodeck.com/); 
@@ -44,4 +49,4 @@ The size of game default card pic is 177x254 and the pics downloaded by this pro
 
 ## You can help me:
 - Open an Issue if you have problems;
-- Or donate: [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate?hosted_button_id=L53Z8HUNP7X66)
+- Or [donate](https://www.paypal.com/donate?hosted_button_id=L53Z8HUNP7X66)
